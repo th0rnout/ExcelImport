@@ -1,5 +1,6 @@
 package com.mercury.excelimport.controller;
 
+import com.mercury.excelimport.DBConnector;
 import javafx.scene.control.Cell;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +20,8 @@ import java.util.Iterator;
 
 public class FileController implements Controller
 {
+    private DBConnector db = new DBConnector();
+
     protected final Log logger = LogFactory.getLog(getClass());
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
@@ -38,6 +41,8 @@ public class FileController implements Controller
         else
         {
             message = "File";
+
+            db.handleRow(null);
 
             Part p1 = request.getPart("excel");
 
