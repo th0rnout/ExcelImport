@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+    <class name="com.mercury.excelimport.model.SystemContract" table="system_contract">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+
+        <property name="active" column="active" type="boolean"/>
+        <property name="amount" column="amount" type="float"/>
+        <property name="amountPeriod" column="amount_period" type="string"/>
+        <property name="amountType" column="amount_type" type="string"/>
+        <property name="authPercent" column="authorization_percent" type="float"/>
+        <property name="fromDate" column="from_date" type="date"/>
+        <property name="orderNumber" column="order_number" type="string"/>
+        <property name="request" column="request" type="string"/>
+        <property name="toDate" column="to_date" type="date"/>
+        <property name="systemId" column="system_id" type="integer"/>
+    </class>
+</hibernate-mapping>

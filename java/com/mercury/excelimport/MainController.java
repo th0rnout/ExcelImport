@@ -18,13 +18,19 @@ public class MainController implements Controller
 {
 	protected final Log logger = LogFactory.getLog(getClass());
 
+    private DBConnector db = new DBConnector();
+
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		logger.info("Returning hello view");
+        logger.info("Returning hello view");
 
 		ModelAndView model = new ModelAndView("/WEB-INF/pages/hello.jsp");
 		model.addObject("person", new Person("Jacek", 20));
+
+        db.handleRow(null);
+
+
 
 		return model;
 	}
