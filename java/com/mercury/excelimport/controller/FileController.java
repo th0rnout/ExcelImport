@@ -3,29 +3,18 @@ package com.mercury.excelimport.controller;
 import com.mercury.excelimport.DBConnector;
 import com.mercury.excelimport.model.FileRow;
 import com.mercury.excelimport.model.SystemContract;
-import javafx.scene.control.Cell;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 @Controller
@@ -61,7 +50,10 @@ public class FileController
                     FileRow row = iter.next();
                 }
 
-                db.handleFile(parser.getFile());
+                if(db.validateFile(parser.getFile()))
+                    db.handleFile(parser.getFile());
+                else;
+                    // TODO: file structure error
             }
         }
 

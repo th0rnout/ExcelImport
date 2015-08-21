@@ -19,9 +19,51 @@ public class DBConnector
 {
     private SessionFactory factory;
 
+    private int faultyRowId = -1;
+
     public DBConnector()
     {
         this.factory = new Configuration().configure().buildSessionFactory();
+    }
+
+
+    // Ensures that system names from File objects exist in database as well, returns false when unknown system is found
+    public boolean validateFile(File file)
+    {
+        Session s = this.factory.openSession();
+        Transaction tx = null;
+
+        try{
+            tx = s.beginTransaction();
+            List system = s.createQuery("FROM System").list();
+            tx.commit();
+
+            for(Iterator<FileRow> it = file.getRowsIterator(); it.hasNext();)
+            {
+                FileRow row = it.next();
+                boolean valid = false;
+
+                for(Iterator itSys = system.iterator(); itSys.hasNext();)
+                {
+                    System sys = (System)itSys.next();
+
+                    if(sys.getName().equals(row.getSystem()))
+                        valid = true;
+                }
+
+                if(!valid)
+                {
+                    return false;
+                }
+            }
+        }
+        catch (HibernateException e) {
+            if (tx!=null)
+                tx.rollback();
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
     // Handles dataset residing in File object
@@ -78,7 +120,6 @@ public class DBConnector
                         row.getFromDate(), row.getOrderNumber(), row.getRequest(), row.getToDate(), sysId);
                 s.save(dbRow);
                 tx.commit();
-                s.close();
             } catch (HibernateException e) {
                 if (tx != null)
                     tx.rollback();
@@ -86,6 +127,8 @@ public class DBConnector
                 e.printStackTrace();
             }
         }
+        s.close();
+
     }
 
     public ArrayList<SystemContract> getContracts()
@@ -105,6 +148,7 @@ public class DBConnector
                 result.add((SystemContract)it.next());
             }
 
+            s.close();
             return result;
         }
         catch (HibernateException e) {
@@ -112,6 +156,7 @@ public class DBConnector
             e.printStackTrace();
         }
 
+        s.close();
         return null;
     }
 }
