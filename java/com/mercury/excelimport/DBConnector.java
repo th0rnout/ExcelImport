@@ -10,9 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fedake on 2015-08-20.
@@ -86,5 +84,32 @@ public class DBConnector
                 e.printStackTrace();
             }
         }
+    }
+
+    public ArrayList<SystemContract> getContracts()
+    {
+        Session s = this.factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = s.beginTransaction();
+            List contracts = s.createQuery("FROM SystemContract").list();
+            tx.commit();
+
+            ArrayList<SystemContract> result = new ArrayList<SystemContract>();
+
+            for(Iterator it = contracts.iterator(); it.hasNext();)
+            {
+                result.add((SystemContract)it.next());
+            }
+
+            return result;
+        }
+        catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
