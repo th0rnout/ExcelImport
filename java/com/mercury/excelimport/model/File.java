@@ -20,6 +20,8 @@ public class File
         this.rows.add(row);
     }
 
+    public void clearRows() { this.rows.clear(); }
+
     public Iterator<FileRow> getRowsIterator()
     {
         return this.rows.iterator();

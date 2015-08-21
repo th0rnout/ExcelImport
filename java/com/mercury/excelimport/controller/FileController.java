@@ -2,12 +2,14 @@ package com.mercury.excelimport.controller;
 
 import com.mercury.excelimport.DBConnector;
 import com.mercury.excelimport.model.FileRow;
+import com.mercury.excelimport.model.SystemContract;
 import javafx.scene.control.Cell;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -30,15 +33,19 @@ import java.util.Iterator;
 public class FileController
 {
     private DBConnector db = new DBConnector();
+    private FileParser parser = new FileParser();
 
     protected final Log logger = LogFactory.getLog(getClass());
 
     @RequestMapping(method = RequestMethod.POST)
-    public String handleFormUpload(@RequestParam("excel") MultipartFile file) {
+    public ModelAndView handleFormUpload(@RequestParam("excel") MultipartFile file) {
+
+        ModelAndView model = new ModelAndView("/hello.jsp");
 
         if (!file.isEmpty()) {
 
             logger.info("Content type: " + file.getContentType());
+
             InputStream stream = null;
             try {
                 stream = file.getInputStream();
@@ -46,19 +53,23 @@ public class FileController
                 e.printStackTrace();
             }
 
-            FileParser parser = new FileParser();
+            if (parser.parse(stream)) {
 
-            if (parser.parse(stream))
-            {
-                return "redirect:parsingDone";
+                Iterator<FileRow> iter = parser.getFile().getRowsIterator();
+                while (iter.hasNext())
+                {
+                    FileRow row = iter.next();
+                }
+
+                db.handleFile(parser.getFile());
             }
-
-
-            // store the bytes somewhere
-            return "hello";
         }
-        
-        return "hello";
+
+        ArrayList<SystemContract> list = db.getContracts();
+        if (list != null)
+            model.addObject("contracts", list);
+
+        return model;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -66,7 +77,7 @@ public class FileController
 
         //db.handleRow(null);
 
-        return "hello";
+        return "hello.jsp";
     }
 
 }

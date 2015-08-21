@@ -30,6 +30,8 @@ public class FileParser
 
     public boolean parse(InputStream stream)
     {
+        file.clearRows();
+
         //Get the workbook instance for XLS file
         XSSFWorkbook workbook = null;
         try {
@@ -48,35 +50,22 @@ public class FileParser
         {
             org.apache.poi.ss.usermodel.Row row = rowIterator.next();
 
+            if (row.getRowNum() == 0)
+                continue;
+
             String system = row.getCell(0).toString();
             String request = row.getCell(1).toString();
             String orderNumber = row.getCell(2).toString();
-            String fd = row.getCell(3).toString();
-            String td = row.getCell(4).toString();
+            java.util.Date fromDate = row.getCell(3).getDateCellValue();
+            java.util.Date toDate = row.getCell(4).getDateCellValue();
             String amount = row.getCell(5).toString();
             String amountType = row.getCell(6).toString();
             String amountPeriod = row.getCell(7).toString();
             String authPercent = row.getCell(8).toString();
             String active = row.getCell(9).toString();
 
-            DateFormat df = new SimpleDateFormat();
-
-            java.util.Date fromDate = null;
-            try {
-                fromDate = df.parse(fd);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            java.util.Date toDate = null;
-            try {
-                toDate = df.parse(td);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
             file.addRow(new FileRow(system, request, orderNumber, fromDate, toDate,
-                    Float.parseFloat(amount), amountType, amountPeriod, Integer.parseInt(authPercent), Boolean.parseBoolean(active)));
+                    Float.parseFloat(amount), amountType, amountPeriod, Float.parseFloat(authPercent), Boolean.parseBoolean(active)));
 
             /*
             Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = row.cellIterator();

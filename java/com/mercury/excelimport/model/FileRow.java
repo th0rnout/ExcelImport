@@ -23,7 +23,7 @@ public class FileRow
 
     }
 
-    public FileRow(String system, String request, String orderNumber, Date fromDate, Date toDate, float amount, String amountType, String amountPeriod, int authPercent, boolean active)
+    public FileRow(String system, String request, String orderNumber, Date fromDate, Date toDate, float amount, String amountType, String amountPeriod, float authPercent, boolean active)
     {
         this.system = system;
         this.request = request;
