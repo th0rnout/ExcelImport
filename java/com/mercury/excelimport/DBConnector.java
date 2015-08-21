@@ -3,6 +3,7 @@ package com.mercury.excelimport;
 import com.mercury.excelimport.model.File;
 import com.mercury.excelimport.model.FileRow;
 import com.mercury.excelimport.model.SystemContract;
+import com.mercury.excelimport.model.System;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Fedake on 2015-08-20.
@@ -42,20 +44,47 @@ public class DBConnector
         Session s = this.factory.openSession();
         Transaction tx = null;
 
-        try
-        {
-            tx = s.beginTransaction();
-            SystemContract dbRow = new SystemContract(0, true, 40.2f, "test", "test", 99, new Date(), "numer", "12", new Date(), 1);
-            s.save(dbRow);
-            tx.commit();
-            s.close();
-        }
-        catch(HibernateException e)
-        {
-            if(tx != null)
-                tx.rollback();
+        int sysId = -1;
 
+        try{
+            tx = s.beginTransaction();
+            List system = s.createQuery("FROM System").list();
+
+
+
+            for (Iterator iterator = system.iterator(); iterator.hasNext();)
+            {
+                System sys = (System) iterator.next();
+                if(row.getSystem().equals(sys.getName())) {
+                    sysId = sys.getId();
+                    break;
+                }
+
+            }
+            tx.commit();
+        }
+        catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
             e.printStackTrace();
+        }
+
+        if(sysId != -1) {
+
+            tx = null;
+            try {
+                tx = s.beginTransaction();
+                SystemContract dbRow = new SystemContract(-1, row.isActive(), row.getAmount(),
+                        row.getAmountPeriod(), row.getAmountType(), row.getAuthPercent(),
+                        row.getFromDate(), row.getOrderNumber(), row.getRequest(), row.getToDate(), sysId);
+                s.save(dbRow);
+                tx.commit();
+                s.close();
+            } catch (HibernateException e) {
+                if (tx != null)
+                    tx.rollback();
+
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -8,14 +8,14 @@ import java.util.Date;
 public class FileRow
 {
     private String system;
-    private int request;
+    private String request;
     private String orderNumber;
     private Date fromDate;
     private Date toDate;
     private float amount;
     private String amountType;
     private String amountPeriod;
-    private int authPercent;
+    private float authPercent;
     private boolean active;
 
     public FileRow()
@@ -23,7 +23,7 @@ public class FileRow
 
     }
 
-    public FileRow(String system, int request, String orderNumber, Date fromDate, Date toDate, float amount, String amountType, String amountPeriod, int authPercent, boolean active)
+    public FileRow(String system, String request, String orderNumber, Date fromDate, Date toDate, float amount, String amountType, String amountPeriod, int authPercent, boolean active)
     {
         this.system = system;
         this.request = request;
@@ -49,11 +49,11 @@ public class FileRow
         this.system = system;
     }
 
-    public int getRequest() {
+    public String getRequest() {
         return request;
     }
 
-    public void setRequest(int request) {
+    public void setRequest(String request) {
         this.request = request;
     }
 
@@ -105,11 +105,11 @@ public class FileRow
         this.amountPeriod = amountPeriod;
     }
 
-    public int getAuthPercent() {
+    public float getAuthPercent() {
         return authPercent;
     }
 
-    public void setAuthPercent(int authPercent) {
+    public void setAuthPercent(float authPercent) {
         this.authPercent = authPercent;
     }
 
