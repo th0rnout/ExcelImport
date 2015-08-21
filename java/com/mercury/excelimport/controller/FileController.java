@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,13 +37,11 @@ public class FileController
     protected final Log logger = LogFactory.getLog(getClass());
 
     @RequestMapping(method = RequestMethod.POST)
-    public String handleFormUpload(@RequestParam("excel") MultipartFile file) {
+    public ModelAndView handleFormUpload(@RequestParam("excel") MultipartFile file) {
 
         logger.info("Rekt");
 
-        ModelAndView model = new ModelAndView("/WEB-INF/pages/hello.jsp");
-
-        String message;
+        ModelAndView model = new ModelAndView("/hello.jsp");
 
         db.handleRow(new FileRow("B020", "2222", "22/2011", new Date(), new Date(), 100.00f, "NET", "MONTH", 2, true));
 
@@ -51,29 +50,13 @@ public class FileController
         if(list != null)
             model.addObject("contracts", list);
 
-        if (request.getMethod() == "GET")
+        if (!file.isEmpty())
         {
-            message = "No file";
-        }
-        else
-        {
-            message = "File";
-
-
-            Part p1 = request.getPart("excel");
-
-            //String file = (request.getParameter("excel")).getBytes().toString();
-            //logger.info(file);
-
-            InputStream file = p1.getInputStream();
-
-            if (!file.isEmpty())
-            {
-                InputStream stream = null;
-                try {
-                    stream = file.getInputStream();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            InputStream stream = null;
+            try {
+                stream = file.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             //Get the workbook instance for XLS file
@@ -104,11 +87,9 @@ public class FileController
                     System.out.println(cell.toString());
                 }
             }
-            // store the bytes somewhere
-            return "hello";
         }
         
-        return "hello";
+        return model;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -116,7 +97,7 @@ public class FileController
 
         //db.handleRow(null);
 
-        return "hello";
+        return "hello.jsp";
     }
 
 }
