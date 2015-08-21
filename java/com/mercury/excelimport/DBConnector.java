@@ -33,7 +33,6 @@ public class DBConnector
         {
             FileRow row = it.next();
 
-            java.lang.System.out.println(row.getSystem());
             this.handleRow(row);
         }
     }

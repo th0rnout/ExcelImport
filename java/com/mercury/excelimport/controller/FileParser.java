@@ -2,6 +2,7 @@ package com.mercury.excelimport.controller;
 
 import com.mercury.excelimport.model.File;
 import com.mercury.excelimport.model.FileRow;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,29 +21,21 @@ import java.util.Locale;
  */
 public class FileParser
 {
-    private File file;
-
-    public FileParser()
+    public File parse(InputStream stream)
     {
-        file = new File();
-    }
-
-
-    public boolean parse(InputStream stream)
-    {
-        file.clearRows();
-
         //Get the workbook instance for XLS file
         XSSFWorkbook workbook = null;
         try {
             workbook = new XSSFWorkbook(stream);
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
 
         //Get first sheet from the workbook
         assert workbook != null;
         XSSFSheet sheet = workbook.getSheetAt(0);
+
+        File file = new File();
 
         //Get iterator to all the rows in current sheet
         Iterator<Row> rowIterator = sheet.iterator();
@@ -56,35 +49,71 @@ public class FileParser
             String system = row.getCell(0).toString();
             String request = row.getCell(1).toString();
             String orderNumber = row.getCell(2).toString();
-            java.util.Date fromDate = row.getCell(3).getDateCellValue();
-            java.util.Date toDate = row.getCell(4).getDateCellValue();
-            String amount = row.getCell(5).toString();
+
+            java.util.Date fromDate;
+            if (tryParseDate(row.getCell(3)))
+                fromDate = row.getCell(3).getDateCellValue();
+            else {
+                System.out.println("Parse error: fromDate is of type: " + row.getCell(3).getCellType());
+                return null;
+            }
+
+            java.util.Date toDate;
+            if (tryParseDate(row.getCell(4)))
+                toDate = row.getCell(4).getDateCellValue();
+            else {
+                System.out.println("Parse error: toDate is of type: " + row.getCell(4).getCellType());
+                return null;
+            }
+
+            float amount;
+            if (tryParseNumeric(row.getCell(5)))
+                amount = Float.parseFloat(row.getCell(5).toString());
+            else {
+                System.out.println("Parse error: amount is of type: " + row.getCell(5).getCellType());
+                return null;
+            }
+
             String amountType = row.getCell(6).toString();
             String amountPeriod = row.getCell(7).toString();
-            String authPercent = row.getCell(8).toString();
+
+            float authPercent;
+            if (tryParseNumeric(row.getCell(8)))
+                authPercent = Float.parseFloat(row.getCell(8).toString());
+            else {
+                System.out.println("Parse error: authPercent is of type: " + row.getCell(8).getCellType());
+                return null;
+            }
+
             String active = row.getCell(9).toString();
 
             file.addRow(new FileRow(system, request, orderNumber, fromDate, toDate,
-                    Float.parseFloat(amount), amountType, amountPeriod, Float.parseFloat(authPercent), Boolean.parseBoolean(active)));
+                    amount, amountType, amountPeriod, authPercent, Boolean.parseBoolean(active)));
 
-            /*
-            Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = row.cellIterator();
-            while(cellIterator.hasNext())
-            {
-                org.apache.poi.ss.usermodel.Cell cell = cellIterator.next();
-            }
-            */
         }
 
-        return true;
-    }
-
-
-    public File getFile() {
         return file;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public boolean tryParseDate(Cell cell)
+    {
+        try {
+            cell.getDateCellValue();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean tryParseNumeric(Cell cell)
+    {
+        String value = cell.toString();
+
+        try {
+            Float.parseFloat(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

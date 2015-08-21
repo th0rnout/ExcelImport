@@ -3,29 +3,18 @@ package com.mercury.excelimport.controller;
 import com.mercury.excelimport.DBConnector;
 import com.mercury.excelimport.model.FileRow;
 import com.mercury.excelimport.model.SystemContract;
-import javafx.scene.control.Cell;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 @Controller
@@ -40,11 +29,13 @@ public class FileController
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView handleFormUpload(@RequestParam("excel") MultipartFile file) {
 
-        ModelAndView model = new ModelAndView("/hello.jsp");
+        ModelAndView model = new ModelAndView("index.jsp");
 
-        if (!file.isEmpty()) {
-
-            logger.info("Content type: " + file.getContentType());
+        if (!file.isEmpty()
+                && (file.getContentType().equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    || file.getContentType().equalsIgnoreCase("application/vnd.ms-excel")))
+        {
+            System.out.println("Content type: " + file.getContentType());
 
             InputStream stream = null;
             try {
@@ -53,16 +44,21 @@ public class FileController
                 e.printStackTrace();
             }
 
-            if (parser.parse(stream)) {
+            com.mercury.excelimport.model.File parsedFile = parser.parse(stream);
 
-                Iterator<FileRow> iter = parser.getFile().getRowsIterator();
-                while (iter.hasNext())
-                {
-                    FileRow row = iter.next();
-                }
-
-                db.handleFile(parser.getFile());
+            /////////
+            // TODO: Support .xls files (HSSFWorkbook)
+            /////////
+            if (parsedFile != null) {
+                db.handleFile(parsedFile);
             }
+            else {
+                System.out.println("File could not be parsed.");
+            }
+        }
+        else
+        {
+            System.out.println("Wrong content type: " + file.getContentType());
         }
 
         ArrayList<SystemContract> list = db.getContracts();
@@ -77,7 +73,7 @@ public class FileController
 
         //db.handleRow(null);
 
-        return "hello.jsp";
+        return "index.jsp";
     }
 
 }

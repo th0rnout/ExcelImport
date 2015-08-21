@@ -9,6 +9,9 @@
 
         <h2>${type}</h2>
 
+        <!------
+        -- TODO: Handle file size exception
+        ------->
         <form:form method="POST" action="/" enctype="multipart/form-data">
             <input type="file" name="excel" accept=".xlsx" />
             <input type="submit" value="Submit"/>
