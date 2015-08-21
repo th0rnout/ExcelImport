@@ -37,6 +37,8 @@ public class FileController
     public String handleFormUpload(@RequestParam("excel") MultipartFile file) {
 
         if (!file.isEmpty()) {
+
+            logger.info("Content type: " + file.getContentType());
             InputStream stream = null;
             try {
                 stream = file.getInputStream();
@@ -44,34 +46,14 @@ public class FileController
                 e.printStackTrace();
             }
 
-            //Get the workbook instance for XLS file
-            XSSFWorkbook workbook = null;
-            try {
-                workbook = new XSSFWorkbook(stream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            FileParser parser = new FileParser();
 
-            //Get first sheet from the workbook
-            assert workbook != null;
-            XSSFSheet sheet = workbook.getSheetAt(0);
-
-
-
-            //Get iterator to all the rows in current sheet
-            Iterator<org.apache.poi.ss.usermodel.Row> rowIterator = sheet.iterator();
-            while(rowIterator.hasNext())
+            if (parser.parse(stream))
             {
-                org.apache.poi.ss.usermodel.Row row = rowIterator.next();
-
-                Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = row.cellIterator();
-                while(cellIterator.hasNext())
-                {
-                    org.apache.poi.ss.usermodel.Cell cell = cellIterator.next();
-
-                    System.out.println(cell.toString());
-                }
+                return "redirect:parsingDone";
             }
+
+
             // store the bytes somewhere
             return "hello";
         }
