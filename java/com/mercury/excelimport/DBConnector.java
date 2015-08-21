@@ -3,11 +3,7 @@ package com.mercury.excelimport;
 import com.mercury.excelimport.model.File;
 import com.mercury.excelimport.model.FileRow;
 import com.mercury.excelimport.model.SystemContract;
-import com.mercury.excelimport.model.System;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
 import java.util.*;
@@ -35,7 +31,7 @@ public class DBConnector
 
         try{
             tx = s.beginTransaction();
-            List system = s.createQuery("FROM System").list();
+            List system = s.createQuery("FROM com.mercury.excelimport.model.System").list();
             tx.commit();
 
             for(Iterator<FileRow> it = file.getRowsIterator(); it.hasNext();)
@@ -45,7 +41,7 @@ public class DBConnector
 
                 for(Iterator itSys = system.iterator(); itSys.hasNext();)
                 {
-                    System sys = (System)itSys.next();
+                    com.mercury.excelimport.model.System sys = (com.mercury.excelimport.model.System)itSys.next();
 
                     if(sys.getName().equals(row.getSystem()))
                         valid = true;
@@ -90,13 +86,13 @@ public class DBConnector
 
         try{
             tx = s.beginTransaction();
-            List system = s.createQuery("FROM System").list();
+            List system = s.createQuery("FROM com.mercury.excelimport.model.System").list();
 
 
 
             for (Iterator iterator = system.iterator(); iterator.hasNext();)
             {
-                System sys = (System) iterator.next();
+                com.mercury.excelimport.model.System sys = (com.mercury.excelimport.model.System) iterator.next();
                 if(row.getSystem().equals(sys.getName())) {
                     sysId = sys.getId();
                     break;
@@ -158,5 +154,17 @@ public class DBConnector
 
         s.close();
         return null;
+    }
+
+    public void deleteRow(int id)
+    {
+        Session s = this.factory.openSession();
+        String query = "DELETE FROM SystemContract WHERE id = :id";
+        Query q = s.createQuery(query);
+        q.setParameter("id", id);
+        int i = q.executeUpdate();
+        s.close();
+
+        System.out.println("Rows affected: " + Integer.toString(i));
     }
 }
