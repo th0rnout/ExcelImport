@@ -1,6 +1,7 @@
 package com.mercury.excelimport.controller;
 
 import com.mercury.excelimport.DBConnector;
+import com.mercury.excelimport.model.FileRow;
 import javafx.scene.control.Cell;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.util.Date;
 import java.util.Iterator;
 
 public class FileController implements Controller
@@ -33,6 +35,7 @@ public class FileController implements Controller
 
         String message;
 
+        db.handleRow(new FileRow("B020", "2222", "22/2011", new Date(), new Date(), 100.00f, "NET", "MONTH", 2, true));
 
         if (request.getMethod() == "GET")
         {
@@ -42,7 +45,6 @@ public class FileController implements Controller
         {
             message = "File";
 
-            db.handleRow(null);
 
             Part p1 = request.getPart("excel");
 
