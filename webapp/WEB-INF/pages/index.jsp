@@ -1,10 +1,13 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
         <title>Spring MVC Form Handling</title>
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.css"/>
+
+        <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
 
         <script type="text/javascript" src="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.js"></script>
     </head>

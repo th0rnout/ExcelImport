@@ -51,7 +51,7 @@ public class FileParser
             String orderNumber = row.getCell(2).toString();
 
             java.util.Date fromDate;
-            if (tryParseDate(row.getCell(3)))
+            if (Utilities.tryParseCellDate(row.getCell(3)))
                 fromDate = row.getCell(3).getDateCellValue();
             else {
                 System.out.println("Parse error: fromDate is of type: " + row.getCell(3).getCellType());
@@ -59,7 +59,7 @@ public class FileParser
             }
 
             java.util.Date toDate;
-            if (tryParseDate(row.getCell(4)))
+            if (Utilities.tryParseCellDate(row.getCell(4)))
                 toDate = row.getCell(4).getDateCellValue();
             else {
                 System.out.println("Parse error: toDate is of type: " + row.getCell(4).getCellType());
@@ -67,7 +67,7 @@ public class FileParser
             }
 
             float amount;
-            if (tryParseNumeric(row.getCell(5)))
+            if (Utilities.tryParseFloat(row.getCell(5).toString()))
                 amount = Float.parseFloat(row.getCell(5).toString());
             else {
                 System.out.println("Parse error: amount is of type: " + row.getCell(5).getCellType());
@@ -78,7 +78,7 @@ public class FileParser
             String amountPeriod = row.getCell(7).toString();
 
             float authPercent;
-            if (tryParseNumeric(row.getCell(8)))
+            if (Utilities.tryParseFloat(row.getCell(8).toString()))
                 authPercent = Float.parseFloat(row.getCell(8).toString());
             else {
                 System.out.println("Parse error: authPercent is of type: " + row.getCell(8).getCellType());
@@ -93,27 +93,5 @@ public class FileParser
         }
 
         return file;
-    }
-
-    public boolean tryParseDate(Cell cell)
-    {
-        try {
-            cell.getDateCellValue();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean tryParseNumeric(Cell cell)
-    {
-        String value = cell.toString();
-
-        try {
-            Float.parseFloat(value);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }
