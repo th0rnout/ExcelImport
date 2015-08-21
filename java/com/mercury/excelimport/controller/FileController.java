@@ -8,9 +8,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
@@ -22,14 +27,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
-public class FileController implements Controller
+@Controller
+@RequestMapping("/")
+public class FileController
 {
     private DBConnector db = new DBConnector();
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @RequestMapping(method = RequestMethod.POST)
+    public String handleFormUpload(@RequestParam("excel") MultipartFile file) {
 
         logger.info("Rekt");
 
@@ -60,12 +67,20 @@ public class FileController implements Controller
 
             InputStream file = p1.getInputStream();
 
+            if (!file.isEmpty())
+            {
+                InputStream stream = null;
+                try {
+                    stream = file.getInputStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+            }
+
             //Get the workbook instance for XLS file
             XSSFWorkbook workbook = null;
             try {
-                workbook = new XSSFWorkbook(file);
+                workbook = new XSSFWorkbook(stream);
             } catch (IOException e) {
-                logger.error("SHIET, DIS EXEL GOT MAD");
                 e.printStackTrace();
             }
 
@@ -89,11 +104,19 @@ public class FileController implements Controller
                     System.out.println(cell.toString());
                 }
             }
-
+            // store the bytes somewhere
+            return "hello";
         }
-
-        model.addObject("type", message);
-
-        return model;
+        
+        return "hello";
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String printWelcome(ModelMap model) {
+
+        //db.handleRow(null);
+
+        return "hello";
+    }
+
 }
