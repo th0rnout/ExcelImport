@@ -48,9 +48,13 @@ public class FileController
 
             /////////
             // TODO: Support .xls files (HSSFWorkbook)
+            // TODO: Tell user what went wrong while parsing
             /////////
             if (parsedFile != null) {
-                db.handleFile(parsedFile);
+                if(db.validateFile(parsedFile))
+                    db.handleFile(parsedFile);
+                else
+                    System.out.println("Incorrect structure: System not found.");
             }
             else {
                 System.out.println("File could not be parsed.");
