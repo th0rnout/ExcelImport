@@ -10,6 +10,9 @@
         <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
 
         <script type="text/javascript" src="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.js"></script>
+        <style>
+            input[type="text"] { width: 50px; }
+        </style>
     </head>
 
     <body>
@@ -43,7 +46,7 @@
             </thead>
             <tbody>
                 <c:forEach items="${contracts}" var="contract">
-                    <tr>
+                    <tr class="row">
                         <td>${contract.id}</td>
                         <td>${contract.active}</td>
                         <td>${contract.amount}</td>
@@ -55,7 +58,7 @@
                         <td>${contract.request}</td>
                         <td>${contract.toDate}</td>
                         <td>${contract.systemId}</td>
-                        <td><a href="javascript:;" class="deleteRow" data-id="${contract.id}">x</a></td>
+                        <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${contract.id}">x</a></td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -64,18 +67,25 @@
             $(document).ready(function() {
                 $("#table").dataTable();
 
-                $(".deleteRow").click(function()
+                function deleteRow(item)
                 {
                     $.ajax({
                         method: 'POST',
                         url: 'deleteRow',
-                        data: {id: $(this).data("id")},
+                        data: {id: $(item).data("id")},
                         success: function()
                         {
                             window.location.href = "./";
                         }
                     });
-                })
+                }
+
+                /*
+                $(".row").click(function() {
+                    $(this).children().each(function (index, item) {
+                        $(item).html('<input type="text" value="'+$(item).html()+'"/>');
+                    })
+                });*/
             });
         </script>
     </body>
