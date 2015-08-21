@@ -71,9 +71,21 @@ public class FileController
     @RequestMapping(method = RequestMethod.GET)
     public String printWelcome(ModelMap model) {
 
-        //db.handleRow(null);
+        ArrayList<SystemContract> list = db.getContracts();
+        if (list != null)
+            model.addAttribute("contracts", list);
 
         return "index.jsp";
+    }
+
+    @RequestMapping(value = "/deleteRow", method = RequestMethod.POST)
+    public String deleteRow(@RequestParam("id") int id)
+    {
+        System.out.println(id);
+
+        this.db.deleteRow(id);
+
+        return "debug.jsp";
     }
 
 }
