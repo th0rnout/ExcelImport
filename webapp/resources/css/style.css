@@ -1,9 +1,26 @@
+@font-face {
+    font-family: 'PT Sans';
+    src: url("pt-sans.ttf") format("truetype");
+}
+
 body
 {
     font-family: 'PT Sans';
 }
 
-table td
+h2
 {
-    background-color: #ddd;
+    margin-bottom: 0px;
+}
+table.dataTable thead tr
+{
+    background-color: #efefef;
+}
+table.dataTable tbody tr:nth-child(even)
+{
+    background-color: #f3f3f3;
+}
+table.dataTable tbody tr td
+{
+    text-align: center;
 }

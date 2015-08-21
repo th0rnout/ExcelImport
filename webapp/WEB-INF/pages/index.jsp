@@ -17,15 +17,19 @@
 
     <body>
 
-        <h2>${type}</h2>
+        <div style="text-align: center;">
+            <h2>ExcelImport project for</h2>
+            <img src="http://www.bluesoft.net.pl/wp-content/uploads/2013/12/logo4.png"/>
 
-        <!------
-        -- TODO: Handle file size exception
-        ------->
-        <form:form method="POST" action="/" enctype="multipart/form-data">
-            <input type="file" name="excel" accept=".xlsx" />
-            <input type="submit" value="Submit"/>
-        </form:form>
+            <!------
+            -- TODO: Handle file size exception
+            ------->
+            <p>Choose an Excel file to import:</p>
+            <form:form method="POST" action="/" enctype="multipart/form-data">
+                <input type="file" name="excel" accept=".xlsx" />
+                <input type="submit" value="Submit"/>
+            </form:form>
+        </div>
 
         <table id="table">
             <thead>
