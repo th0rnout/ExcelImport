@@ -34,35 +34,33 @@
         <table id="table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Active</th>
-                    <th>Amount</th>
-                    <th>Amount period</th>
-                    <th>Amount type</th>
-                    <th>Authentication (%)</th>
-                    <th>From date</th>
-                    <th>Order number</th>
+                    <th>System</th>
                     <th>Request</th>
+                    <th>Order number</th>
+                    <th>From date</th>
                     <th>To date</th>
-                    <th>System ID</th>
+                    <th>Amount</th>
+                    <th>Amount type</th>
+                    <th>Amount period</th>
+                    <th>Authorization (%)</th>
+                    <th>Active</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <c:forEach items="${contracts}" var="contract">
+                <c:forEach items="${rows}" var="row">
                     <tr class="row">
-                        <td>${contract.id}</td>
-                        <td>${contract.active}</td>
-                        <td>${contract.amount}</td>
-                        <td>${contract.amountPeriod}</td>
-                        <td>${contract.amountType}</td>
-                        <td>${contract.authPercent}</td>
-                        <td>${contract.fromDate}</td>
-                        <td>${contract.orderNumber}</td>
-                        <td>${contract.request}</td>
-                        <td>${contract.toDate}</td>
-                        <td>${contract.systemId}</td>
-                        <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${contract.id}">x</a></td>
+                        <td>${row.system}</td>
+                        <td>${row.request}</td>
+                        <td>${row.orderNumber}</td>
+                        <td>${row.fromDate}</td>
+                        <td>${row.toDate}</td>
+                        <td>${row.amount}</td>
+                        <td>${row.amountType}</td>
+                        <td>${row.amountPeriod}</td>
+                        <td>${row.authPercent}</td>
+                        <td>${row.active}</td>
+                        <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${row.contractId}">x</a></td>
                     </tr>
                 </c:forEach>
             </tbody>

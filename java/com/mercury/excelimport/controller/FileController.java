@@ -67,7 +67,21 @@ public class FileController
 
         ArrayList<SystemContract> list = db.getContracts();
         if (list != null)
-            model.addObject("contracts", list);
+        {
+            ArrayList<FileRow> rows = new ArrayList<FileRow>();
+
+            for(Iterator<SystemContract> it = list.iterator(); it.hasNext();)
+            {
+                SystemContract contract = it.next();
+
+                rows.add(new FileRow(db.getSystem(contract.getSystemId()).getName(), contract.getRequest(), contract.getOrderNumber(), contract.getFromDate(),
+                        contract.getToDate(), contract.getAmount(), contract.getAmountType(), contract.getAmountPeriod(),
+                        contract.getAuthPercent(), contract.isActive(), contract.getId()));
+            }
+
+            model.addObject("rows", rows);
+
+        }
 
         return model;
     }
@@ -77,7 +91,21 @@ public class FileController
 
         ArrayList<SystemContract> list = db.getContracts();
         if (list != null)
-            model.addAttribute("contracts", list);
+        {
+            ArrayList<FileRow> rows = new ArrayList<FileRow>();
+
+            for(Iterator<SystemContract> it = list.iterator(); it.hasNext();)
+            {
+                SystemContract contract = it.next();
+
+                rows.add(new FileRow(db.getSystem(contract.getSystemId()).getName(), contract.getRequest(),
+                        contract.getOrderNumber(), contract.getFromDate(), contract.getToDate(), contract.getAmount(),
+                        contract.getAmountType(), contract.getAmountPeriod(), contract.getAuthPercent(),
+                        contract.isActive(), contract.getId()));
+            }
+
+            model.addAttribute("rows", rows);
+        }
 
         return "index.jsp";
     }

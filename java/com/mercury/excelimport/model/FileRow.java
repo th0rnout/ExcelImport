@@ -17,6 +17,7 @@ public class FileRow
     private String amountPeriod;
     private float authPercent;
     private boolean active;
+    private int contractId;
 
     public FileRow()
     {
@@ -35,6 +36,23 @@ public class FileRow
         this.amountPeriod = amountPeriod;
         this.authPercent = authPercent;
         this.active = active;
+        this.contractId = -1;
+
+    }
+
+    public FileRow(String system, String request, String orderNumber, Date fromDate, Date toDate, float amount, String amountType, String amountPeriod, float authPercent, boolean active, int contractId)
+    {
+        this.system = system;
+        this.request = request;
+        this.orderNumber = orderNumber;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.amount = amount;
+        this.amountType = amountType;
+        this.amountPeriod = amountPeriod;
+        this.authPercent = authPercent;
+        this.active = active;
+        this.contractId = contractId;
 
     }
 
@@ -119,5 +137,13 @@ public class FileRow
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(int contractId) {
+        this.contractId = contractId;
     }
 }
