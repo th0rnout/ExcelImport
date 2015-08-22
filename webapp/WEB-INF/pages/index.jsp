@@ -5,83 +5,96 @@
 <html>
     <head>
         <title>ExcelImport for Bluesoft</title>
-        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.css"/>
 
         <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
 
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.js"></script>
-        <style>
-            input[type="text"] { width: 100px; }
-        </style>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
     </head>
 
     <body>
 
-        <div style="text-align: center;">
-            <h2>ExcelImport project for</h2>
-            <img src="http://www.bluesoft.net.pl/wp-content/uploads/2013/12/logo4.png"/>
+        <div class="container">
+            <div class="row" style="text-align: center;">
+                <div class="col-lg-2 vcenter">
+                    <!--<h2>ExcelImport project for</h2>-->
+                    <img src="http://www.bluesoft.net.pl/wp-content/uploads/2013/12/logo4.png"/>
+                </div><!--
+                <!------
+                -- TODO: Handle file size exception
+                -------
+                --><div class="col-lg-4 vcenter excel-input">
+                    <p>Choose an Excel file to import:</p>
+                    <form:form method="POST" action="/" enctype="multipart/form-data">
 
-            <!------
-            -- TODO: Handle file size exception
-            ------->
-            <p>Choose an Excel file to import:</p>
-            <form:form method="POST" action="/" enctype="multipart/form-data">
-                <input type="file" name="excel" accept=".xlsx" />
-                <input type="submit" value="Submit"/>
-            </form:form>
+                        <span class="btn btn-default btn-file">
+                            Browse <input type="file" name="excel" accept=".xlsx" style="display: inline;"/>
+                        </span>
+                        <input type="text" class="form-control filename" disabled/>
+                        <input type="submit" class="btn btn-primary " value="Submit">
+                    </form:form>
+                </div>
+            </div>
+
+            <div class="row">
+                <table id="table" class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>System</th>
+                            <th>Request</th>
+                            <th>Order number</th>
+                            <th>From date</th>
+                            <th>To date</th>
+                            <th>Amount</th>
+                            <th>Amount type</th>
+                            <th>Amount period</th>
+                            <th>Authorization (%)</th>
+                            <th>Active</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${rows}" var="row">
+                            <tr class="table-row">
+                                <td>${row.system}</td>
+                                <td>${row.request}</td>
+                                <td>${row.orderNumber}</td>
+                                <td>${row.fromDate}</td>
+                                <td>${row.toDate}</td>
+                                <td>${row.amount}</td>
+                                <td>${row.amountType}</td>
+                                <td>${row.amountPeriod}</td>
+                                <td>${row.authPercent}</td>
+                                <td>${row.active}</td>
+                                <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${row.contractId}">x</a></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <form:form id="form" commandName="row">
+                    <form:input path="system" type="text" placeholder="System"/>
+                    <form:input path="request" type="text" placeholder="Request"/>
+                    <form:input path="orderNumber" type="text" placeholder="Order number"/>
+                    <form:input path="fromDate" type="text" placeholder="From date"/>
+                    <form:input path="toDate" type="text" placeholder="To date"/>
+                    <form:input path="amount" type="text" placeholder="Amount"/>
+                    <form:input path="amountType" type="text" placeholder="Amount type"/>
+                    <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
+                    <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
+                    <form:input path="active" type="text" placeholder="Active"/>
+                    <form:input path="contractId" type="hidden" value="-1"/>
+                </form:form>
+
+                <input type="submit" value="Add" onclick="addRow(this)"/>
+            </div>
         </div>
-
-        <table id="table">
-            <thead>
-                <tr>
-                    <th>System</th>
-                    <th>Request</th>
-                    <th>Order number</th>
-                    <th>From date</th>
-                    <th>To date</th>
-                    <th>Amount</th>
-                    <th>Amount type</th>
-                    <th>Amount period</th>
-                    <th>Authorization (%)</th>
-                    <th>Active</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${rows}" var="row">
-                    <tr class="row">
-                        <td>${row.system}</td>
-                        <td>${row.request}</td>
-                        <td>${row.orderNumber}</td>
-                        <td>${row.fromDate}</td>
-                        <td>${row.toDate}</td>
-                        <td>${row.amount}</td>
-                        <td>${row.amountType}</td>
-                        <td>${row.amountPeriod}</td>
-                        <td>${row.authPercent}</td>
-                        <td>${row.active}</td>
-                        <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${row.contractId}">x</a></td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-
-        <form:form id="form" commandName="row">
-            <form:input path="system" type="text" placeholder="System"/>
-            <form:input path="request" type="text" placeholder="Request"/>
-            <form:input path="orderNumber" type="text" placeholder="Order number"/>
-            <form:input path="fromDate" type="text" placeholder="From date"/>
-            <form:input path="toDate" type="text" placeholder="To date"/>
-            <form:input path="amount" type="text" placeholder="Amount"/>
-            <form:input path="amountType" type="text" placeholder="Amount type"/>
-            <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
-            <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
-            <form:input path="active" type="text" placeholder="Active"/>
-            <form:input path="contractId" type="hidden" value="-1"/>
-        </form:form>
-
-        <input type="submit" value="Add" onclick="addRow(this)"/>
 
         <script>
             $(document).ready(function() {
@@ -93,6 +106,13 @@
                         $(item).html('<input type="text" value="'+$(item).html()+'"/>');
                     })
                 });*/
+            });
+
+            $(function() {
+                $("input:file").change(function (){
+                    var fileName = $(this).val();
+                    $(".filename").val(fileName);
+                });
             });
 
             function deleteRow(item)

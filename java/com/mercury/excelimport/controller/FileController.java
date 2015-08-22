@@ -5,6 +5,7 @@ import com.mercury.excelimport.model.FileRow;
 import com.mercury.excelimport.model.SystemContract;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -26,10 +27,17 @@ import java.util.Iterator;
 @RequestMapping("/")
 public class FileController
 {
-    private DBConnector db = new DBConnector();
-    private FileParser parser = new FileParser();
+    private DBConnector db;
+    private FileParser parser;
 
     protected final Log logger = LogFactory.getLog(getClass());
+
+    @Autowired
+    public FileController(DBConnector db, FileParser parser)
+    {
+        this.db = db;
+        this.parser = parser;
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView handleFormUpload(@RequestParam("excel") MultipartFile file) {
@@ -59,7 +67,7 @@ public class FileController
                 if(db.validateFile(parsedFile))
                     db.handleFile(parsedFile);
                 else
-                    System.out.println("Incorrect structure: System not found.");
+                System.out.println("Incorrect structure: System not found.");
             }
             else {
                 System.out.println("File could not be parsed.");
@@ -73,19 +81,9 @@ public class FileController
         ArrayList<SystemContract> list = db.getContracts();
         if (list != null)
         {
-            ArrayList<FileRow> rows = new ArrayList<FileRow>();
-
-            for(Iterator<SystemContract> it = list.iterator(); it.hasNext();)
-            {
-                SystemContract contract = it.next();
-
-                rows.add(new FileRow(db.getSystem(contract.getSystemId()).getName(), contract.getRequest(), contract.getOrderNumber(), contract.getFromDate(),
-                        contract.getToDate(), contract.getAmount(), contract.getAmountType(), contract.getAmountPeriod(),
-                        contract.getAuthPercent(), contract.isActive(), contract.getId()));
-            }
+            ArrayList<FileRow> rows = convertContracts(list);
 
             model.addObject("rows", rows);
-
         }
 
         model.addObject("row", new FileRow());
@@ -99,17 +97,7 @@ public class FileController
         ArrayList<SystemContract> list = db.getContracts();
         if (list != null)
         {
-            ArrayList<FileRow> rows = new ArrayList<FileRow>();
-
-            for(Iterator<SystemContract> it = list.iterator(); it.hasNext();)
-            {
-                SystemContract contract = it.next();
-
-                rows.add(new FileRow(db.getSystem(contract.getSystemId()).getName(), contract.getRequest(),
-                        contract.getOrderNumber(), contract.getFromDate(), contract.getToDate(), contract.getAmount(),
-                        contract.getAmountType(), contract.getAmountPeriod(), contract.getAuthPercent(),
-                        contract.isActive(), contract.getId()));
-            }
+            ArrayList<FileRow> rows = convertContracts(list);
 
             model.addAttribute("rows", rows);
         }
@@ -141,4 +129,18 @@ public class FileController
         return "debug.jsp";
     }
 
+    public ArrayList<FileRow> convertContracts(ArrayList<SystemContract> list)
+    {
+        ArrayList<FileRow> rows = new ArrayList<FileRow>();
+
+        for (Iterator<SystemContract> it = list.iterator(); it.hasNext(); ) {
+            SystemContract contract = it.next();
+
+            rows.add(new FileRow(db.getSystem(contract.getSystemId()).getName(), contract.getRequest(), contract.getOrderNumber(), contract.getFromDate(),
+                    contract.getToDate(), contract.getAmount(), contract.getAmountType(), contract.getAmountPeriod(),
+                    contract.getAuthPercent(), contract.isActive(), contract.getId()));
+        }
+
+        return rows;
+    }
 }

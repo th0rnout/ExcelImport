@@ -2,23 +2,19 @@ package com.mercury.excelimport.controller;
 
 import com.mercury.excelimport.model.File;
 import com.mercury.excelimport.model.FileRow;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Iterator;
-import java.util.Locale;
 
 /**
  * Created by Daniel on 2015-08-21.
  */
+@Component
 public class FileParser
 {
     public File parse(InputStream stream)
