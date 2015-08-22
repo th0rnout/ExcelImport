@@ -66,16 +66,20 @@ public class FileController
             if (parsedFile != null) {
                 if(db.validateFile(parsedFile))
                     db.handleFile(parsedFile);
-                else
-                System.out.println("Incorrect structure: System not found.");
+                else {
+                    System.out.println("Incorrect structure: System not found.");
+                    model.addObject("error", "Invalid structure: System not found");
+                }
             }
             else {
                 System.out.println("File could not be parsed.");
+                model.addObject("error", "File could not be parsed.");
             }
         }
         else
         {
             System.out.println("Wrong content type: " + file.getContentType());
+            model.addObject("error", "Wrong content type: " + file.getContentType());
         }
 
         ArrayList<SystemContract> list = db.getContracts();

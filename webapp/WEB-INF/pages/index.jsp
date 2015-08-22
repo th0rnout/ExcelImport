@@ -30,7 +30,6 @@
                 --><div class="col-lg-4 vcenter excel-input">
                     <p>Choose an Excel file to import:</p>
                     <form:form method="POST" action="/" enctype="multipart/form-data">
-
                         <span class="btn btn-default btn-file">
                             Browse <input type="file" name="excel" accept=".xlsx" style="display: inline;"/>
                         </span>
@@ -38,6 +37,8 @@
                         <input type="submit" class="btn btn-primary " value="Submit">
                     </form:form>
                 </div>
+
+                <div class="error">${error}</div>
             </div>
 
             <div class="row">
@@ -77,20 +78,21 @@
                 </table>
             </div>
 
-            <div class="row">
-                <form:form id="form" commandName="row">
-                    <form:input path="system" type="text" placeholder="System"/>
-                    <form:input path="request" type="text" placeholder="Request"/>
-                    <form:input path="orderNumber" type="text" placeholder="Order number"/>
-                    <form:input path="fromDate" type="text" placeholder="From date"/>
-                    <form:input path="toDate" type="text" placeholder="To date"/>
-                    <form:input path="amount" type="text" placeholder="Amount"/>
-                    <form:input path="amountType" type="text" placeholder="Amount type"/>
-                    <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
-                    <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
-                    <form:input path="active" type="text" placeholder="Active"/>
-                    <form:input path="contractId" type="hidden" value="-1"/>
-                </form:form>
+        <div class="row">
+            <form:form id="form" commandName="row">
+                <form:input path="system" type="text" placeholder="System"/>
+                <form:input path="request" type="text" placeholder="Request"/>
+                <form:input path="orderNumber" type="text" placeholder="Order number"/>
+                <form:input path="fromDate" type="text" placeholder="From date"/>
+                <form:input path="toDate" type="text" placeholder="To date"/>
+                <form:input path="amount" type="text" placeholder="Amount"/>
+                <form:input path="amountType" type="text" placeholder="Amount type"/>
+                <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
+                <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
+                <form:input path="active" type="text" placeholder="Active"/>
+                <form:input path="contractId" type="hidden" value="-1"/>
+            </form:form>
+
 
                 <input type="submit" value="Add" onclick="addRow(this)"/>
             </div>

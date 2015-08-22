@@ -19,34 +19,11 @@ public class DBConnector
 {
     private SessionFactory factory;
 
-    private ArrayList<System> systems = new ArrayList<System>();
-
     private int faultyRowId = -1;
 
     public DBConnector()
     {
         this.factory = new Configuration().configure().buildSessionFactory();
-
-        Session s = this.factory.openSession();
-        Transaction tx = null;
-
-        try{
-            tx = s.beginTransaction();
-            List systems = s.createQuery("FROM System").list();
-            tx.commit();
-
-            for(Iterator itSys = systems.iterator(); itSys.hasNext();)
-            {
-                System sys = (System)itSys.next();
-
-                this.systems.add(sys);
-            }
-        }
-        catch (HibernateException e) {
-            if (tx!=null)
-                tx.rollback();
-            e.printStackTrace();
-        }
     }
 
 
@@ -144,12 +121,26 @@ public class DBConnector
     // Gets System object by name
     public System getSystem(String name)
     {
-        for(Iterator<System> itSys = this.systems.iterator(); itSys.hasNext();)
-        {
-            System sys = itSys.next();
+        Session s = this.factory.openSession();
+        Transaction tx = null;
 
-            if(sys.getName().equals(name))
-                return sys;
+        try{
+            tx = s.beginTransaction();
+            Query q = s.createQuery("FROM System WHERE name = :name");
+            q.setParameter("name", name);
+
+            List systems = q.list();
+            tx.commit();
+
+            for(Iterator itSys = systems.iterator(); itSys.hasNext();)
+            {
+                return (System)itSys.next();
+            }
+        }
+        catch (HibernateException e) {
+            if (tx!=null)
+                tx.rollback();
+            e.printStackTrace();
         }
 
         return null;
@@ -158,12 +149,26 @@ public class DBConnector
     // Gets System object by id
     public System getSystem(int id)
     {
-        for(Iterator<System> itSys = this.systems.iterator(); itSys.hasNext();)
-        {
-            System sys = itSys.next();
+        Session s = this.factory.openSession();
+        Transaction tx = null;
 
-            if(sys.getId() == id)
-                return sys;
+        try{
+            tx = s.beginTransaction();
+            Query q = s.createQuery("FROM System WHERE id = :id");
+            q.setParameter("id", id);
+
+            List systems = q.list();
+            tx.commit();
+
+            for(Iterator itSys = systems.iterator(); itSys.hasNext();)
+            {
+                return (System)itSys.next();
+            }
+        }
+        catch (HibernateException e) {
+            if (tx!=null)
+                tx.rollback();
+            e.printStackTrace();
         }
 
         return null;
