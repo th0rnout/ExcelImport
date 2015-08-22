@@ -71,10 +71,10 @@ public class DBConnector
         {
             try {
                 tx = s.beginTransaction();
-                SystemContract dbRow = new SystemContract(-1, row.isActive(), row.getAmount(),
+                SystemContract dbRow = new SystemContract(row.getContractId(), row.isActive(), row.getAmount(),
                         row.getAmountPeriod(), row.getAmountType(), row.getAuthPercent(),
                         row.getFromDate(), row.getOrderNumber(), row.getRequest(), row.getToDate(), sys.getId());
-                s.save(dbRow);
+                s.saveOrUpdate(dbRow);
                 tx.commit();
             } catch (HibernateException e) {
                 if (tx != null)
@@ -132,6 +132,7 @@ public class DBConnector
 
             for(Iterator itSys = systems.iterator(); itSys.hasNext();)
             {
+                s.close();
                 return (System)itSys.next();
             }
         }
@@ -141,6 +142,7 @@ public class DBConnector
             e.printStackTrace();
         }
 
+        s.close();
         return null;
     }
 
@@ -160,6 +162,7 @@ public class DBConnector
 
             for(Iterator itSys = systems.iterator(); itSys.hasNext();)
             {
+                s.close();
                 return (System)itSys.next();
             }
         }
@@ -169,6 +172,7 @@ public class DBConnector
             e.printStackTrace();
         }
 
+        s.close();
         return null;
 
     }

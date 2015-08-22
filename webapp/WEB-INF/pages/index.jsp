@@ -51,7 +51,7 @@
             </thead>
             <tbody>
                 <c:forEach items="${rows}" var="row">
-                    <tr class="row">
+                    <tr onclick="rowClick(this)" data-id="${row.contractId}">
                         <td>${row.system}</td>
                         <td>${row.request}</td>
                         <td>${row.orderNumber}</td>
@@ -79,10 +79,10 @@
             <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
             <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
             <form:input path="active" type="text" placeholder="Active"/>
-            <form:input path="contractId" type="hidden" value="-1"/>
+            <form:input id="contract-id" path="contractId" type="hidden" value="0"/>
         </form:form>
 
-        <input type="submit" value="Add" onclick="addRow(this)"/>
+        <input id="add-button" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
 
         <script>
             $(document).ready(function() {
@@ -109,17 +109,41 @@
                 });
             }
 
-            function addRow(item)
+            function saveOrUpdateRow(item)
             {
+                alert($("#form").serialize());
+
                 $.ajax({
                     type:"POST",
                     data: $("#form").serialize(),
-                    url:"addRow",
+                    url:"saveOrUpdateRow",
                     success: function()
                     {
                         window.location.href = "./";
                     }
                 });
+
+
+                $("#contract-id").val(0);
+                $("#add-button").val("Add");
+                $("#form").children().each(function(item)
+                {
+                    $(item).val('');
+                })
+            }
+
+            function rowClick(item)
+            {
+                $("#contract-id").val($(item).data("id"));
+                $("#add-button").val("Save");
+
+                var inputs = $("#form").children().toArray();
+                var cells = $(item).children().toArray();
+
+                for(var i = 0; i < 10; i++)
+                {
+                    $(inputs[i]).val($(cells[i]).html());
+                }
             }
         </script>
     </body>

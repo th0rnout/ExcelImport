@@ -145,4 +145,16 @@ public class FileController
         return "debug.jsp";
     }
 
+    @RequestMapping(value = "/saveOrUpdateRow")
+    public String saveOrUpdateRow(@ModelAttribute("row") FileRow row,
+                         BindingResult errors, HttpServletRequest request)
+    {
+        System.out.println(row.getToDate());
+
+        if(this.db.validateRow(row))
+            this.db.handleRow(row);
+
+        return "debug.jsp";
+    }
+
 }

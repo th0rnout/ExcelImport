@@ -1,5 +1,7 @@
 package com.mercury.excelimport.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -36,7 +38,7 @@ public class FileRow
         this.amountPeriod = amountPeriod;
         this.authPercent = authPercent;
         this.active = active;
-        this.contractId = -1;
+        this.contractId = 0;
 
     }
 
@@ -87,16 +89,25 @@ public class FileRow
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
+    public void setFromDate(String fromDate) {
+        try {
+            this.fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public Date getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
+
+    public void setToDate(String toDate) {
+        try {
+            this.toDate = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public float getAmount() {
