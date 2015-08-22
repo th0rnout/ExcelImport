@@ -35,7 +35,7 @@
                             Browse <input type="file" name="excel" accept=".xlsx" style="display: inline;"/>
                         </span>
                         <input type="text" class="form-control filename" disabled/>
-                        <input type="submit" class="btn btn-primary " value="Submit">
+                        <input type="submit" class="btn btn-primary" value="Submit">
                     </form:form>
                 </div>
 
@@ -79,22 +79,23 @@
                 </table>
             </div>
 
-            <div class="row">
+            <div class="row new-form">
                 <form:form id="form" commandName="row">
-                    <form:input path="system" type="text" placeholder="System"/>
-                    <form:input path="request" type="text" placeholder="Request"/>
-                    <form:input path="orderNumber" type="text" placeholder="Order number"/>
-                    <form:input path="fromDate" type="date" placeholder="From date"/>
-                    <form:input path="toDate" type="date" placeholder="To date"/>
-                    <form:input path="amount" type="text" placeholder="Amount"/>
-                    <form:input path="amountType" type="text" placeholder="Amount type"/>
-                    <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
-                    <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
-                    <form:input path="active" type="text" placeholder="Active"/>
+                    <form:input path="system" type="text" class="form-control" placeholder="System" style="width: 80px;"/>
+                    <form:input path="request" type="text" class="form-control" placeholder="Request" style="width: 80px;"/>
+                    <form:input path="orderNumber" type="text" class="form-control" placeholder="Order number" style="width: 120px;"/>
+                    <form:input path="fromDate" type="date" class="form-control" placeholder="From date" style="width: 160px;"/>
+                    <form:input path="toDate" type="date" class="form-control" placeholder="To date" style="width: 160px;"/>
+                    <form:input path="amount" type="text" class="form-control" placeholder="Amount" style="width: 80px;"/>
+                    <form:input path="amountType" type="text" class="form-control" placeholder="Amount type" style="width: 80px;"/>
+                    <form:input path="amountPeriod" type="text" class="form-control" placeholder="Amount period" style="width: 80px;"/>
+                    <form:input path="authPercent" type="text" class="form-control" placeholder="Authorization percent" style="width: 80px;"/>
+                    <form:input path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
                     <form:input path="contractId" type="hidden" value="0"/>
+
+                    <input id="add-button" class="btn btn-primary" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
                 </form:form>
 
-                <input id="add-button" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
             </div>
         </div>
 

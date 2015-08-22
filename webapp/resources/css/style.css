@@ -8,7 +8,7 @@ body
     font-family: 'PT Sans';
 }
 
-input[type="text"] { width: 100px; }
+input[type="text"], input[type="date"] { width: 100px; }
 
 h2
 {
@@ -115,4 +115,20 @@ input.filename
     width: 200px;
     display: inline-block;
     vertical-align: middle;
+}
+
+.new-form
+{
+    margin-top: 5px;
+    border-top: 2px solid #ddd;
+    padding-top: 10px;
+}
+.new-form input
+{
+    display: inline-block;
+}
+.new-form input[type="submit"]
+{
+    vertical-align: top;
+    margin-left: 10px;
 }
