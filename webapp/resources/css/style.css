@@ -8,19 +8,111 @@ body
     font-family: 'PT Sans';
 }
 
+input[type="text"] { width: 100px; }
+
 h2
 {
     margin-bottom: 0px;
 }
-table.dataTable thead tr
+
+.excel-input
 {
-    background-color: #efefef;
+    padding-top: 10px;
 }
-table.dataTable tbody tr:nth-child(even)
+
+.dataTables_length select {
+    width: 50px;
+    height: 26px;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.dataTables_wrapper .dataTables_filter input {
+    width: 150px;
+    height: 26px;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+table.dataTable
 {
-    background-color: #f3f3f3;
+    font-size: 14px;
+}
+table.dataTable.no-footer
+{
+    border-bottom: 2px solid #ddd;
 }
 table.dataTable tbody tr td
 {
     text-align: center;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current
+{
+    color: #333;
+    background: none;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover
+{
+    color: #222 !important;
+    background: none;
+    background-color: #eee;
+    border-color: #bbb;
+}
+
+.vcenter {
+    text-align:left;
+    float: none !important;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+input.filename
+{
+    width: 200px;
+    display: inline-block;
+    vertical-align: middle;
 }

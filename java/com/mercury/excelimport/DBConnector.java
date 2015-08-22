@@ -4,6 +4,7 @@ import com.mercury.excelimport.model.*;
 import com.mercury.excelimport.model.System;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Created by Fedake on 2015-08-20.
  */
+@Component
 public class DBConnector
 {
     private SessionFactory factory;
