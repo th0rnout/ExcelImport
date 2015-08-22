@@ -2,11 +2,16 @@ package com.mercury.excelimport.controller;
 
 import com.mercury.excelimport.model.File;
 import com.mercury.excelimport.model.FileRow;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -19,17 +24,18 @@ public class FileParser
 {
     public File parse(InputStream stream)
     {
-        //Get the workbook instance for XLS file
-        XSSFWorkbook workbook = null;
+        Workbook wb = null;
         try {
-            workbook = new XSSFWorkbook(stream);
+            wb = WorkbookFactory.create(stream);
         } catch (IOException e) {
-            return null;
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
         }
+        if(wb == null)
+            return null;
 
-        //Get first sheet from the workbook
-        assert workbook != null;
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        Sheet sheet = wb.getSheetAt(0);
 
         File file = new File();
 

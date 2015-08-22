@@ -105,7 +105,11 @@
 
         <script>
             $(document).ready(function() {
-                $("#table").dataTable();
+                $("#table").dataTable({
+                    "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [ 10 ] }
+                    ]
+                });
 
                 /*
                 $(".row").click(function() {
