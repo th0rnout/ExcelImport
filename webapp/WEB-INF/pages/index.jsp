@@ -1,9 +1,10 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
     <head>
-        <title>Spring MVC Form Handling</title>
+        <title>ExcelImport for Bluesoft</title>
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.css"/>
 
@@ -11,7 +12,7 @@
 
         <script type="text/javascript" src="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.js"></script>
         <style>
-            input[type="text"] { width: 50px; }
+            input[type="text"] { width: 100px; }
         </style>
     </head>
 
@@ -65,22 +66,26 @@
                 </c:forEach>
             </tbody>
         </table>
+
+        <form:form id="form" commandName="row">
+            <form:input path="system" type="text" placeholder="System"/>
+            <form:input path="request" type="text" placeholder="Request"/>
+            <form:input path="orderNumber" type="text" placeholder="Order number"/>
+            <form:input path="fromDate" type="text" placeholder="From date"/>
+            <form:input path="toDate" type="text" placeholder="To date"/>
+            <form:input path="amount" type="text" placeholder="Amount"/>
+            <form:input path="amountType" type="text" placeholder="Amount type"/>
+            <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
+            <form:input path="authPercent" type="text" placeholder="Authorization percent"/>
+            <form:input path="active" type="text" placeholder="Active"/>
+            <form:input path="contractId" type="hidden" value="-1"/>
+        </form:form>
+
+        <input type="submit" value="Add" onclick="addRow(this)"/>
+
         <script>
             $(document).ready(function() {
                 $("#table").dataTable();
-
-                function deleteRow(item)
-                {
-                    $.ajax({
-                        method: 'POST',
-                        url: 'deleteRow',
-                        data: {id: $(item).data("id")},
-                        success: function()
-                        {
-                            window.location.href = "./";
-                        }
-                    });
-                }
 
                 /*
                 $(".row").click(function() {
@@ -89,6 +94,32 @@
                     })
                 });*/
             });
+
+            function deleteRow(item)
+            {
+                $.ajax({
+                    method: 'POST',
+                    url: 'deleteRow',
+                    data: {id: $(item).data("id")},
+                    success: function()
+                    {
+                        window.location.href = "./";
+                    }
+                });
+            }
+
+            function addRow(item)
+            {
+                $.ajax({
+                    type:"POST",
+                    data: $("#form").serialize(),
+                    url:"addRow",
+                    success: function()
+                    {
+                        window.location.href = "./";
+                    }
+                });
+            }
         </script>
     </body>
 </html>

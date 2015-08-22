@@ -55,12 +55,18 @@ public class DBConnector
         {
             FileRow row = it.next();
 
-            if(this.getSystem(row.getSystem()) == null)
+            if(!validateRow(row))
             {
                 return false;
             }
         }
+
         return true;
+    }
+
+    public boolean validateRow(FileRow row)
+    {
+        return this.getSystem(row.getSystem()) != null;
     }
 
     // Handles dataset residing in File object

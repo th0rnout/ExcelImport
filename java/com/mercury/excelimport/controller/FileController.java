@@ -7,12 +7,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -83,6 +88,8 @@ public class FileController
 
         }
 
+        model.addObject("row", new FileRow());
+
         return model;
     }
 
@@ -107,6 +114,8 @@ public class FileController
             model.addAttribute("rows", rows);
         }
 
+        model.addAttribute("row", new FileRow());
+
         return "index.jsp";
     }
 
@@ -116,6 +125,18 @@ public class FileController
         System.out.println(id);
 
         this.db.deleteRow(id);
+
+        return "debug.jsp";
+    }
+
+    @RequestMapping(value = "/addRow")
+    public String addRow(@ModelAttribute("row") FileRow row,
+                         BindingResult errors, HttpServletRequest request)
+    {
+        System.out.println(row.getSystem());
+
+        if(this.db.validateRow(row))
+            this.db.handleRow(row);
 
         return "debug.jsp";
     }
