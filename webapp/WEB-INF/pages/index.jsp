@@ -54,7 +54,7 @@
                             <th>Amount</th>
                             <th>Amount type</th>
                             <th>Amount period</th>
-                            <th>Authorization (%)</th>
+                            <th>Auth (%)</th>
                             <th>Active</th>
                             <th></th>
                         </tr>
@@ -72,7 +72,7 @@
                                 <td>${row.amountPeriod}</td>
                                 <td>${row.authPercent}</td>
                                 <td>${row.active}</td>
-                                <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${row.contractId}">x</a></td>
+                                <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${row.contractId}"><button class="btn btn-danger btn-xs">Delete</button></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -89,12 +89,12 @@
                     <form:input path="amount" type="text" class="form-control" placeholder="Amount" style="width: 80px;"/>
                     <form:input path="amountType" type="text" class="form-control" placeholder="Amount type" style="width: 80px;"/>
                     <form:input path="amountPeriod" type="text" class="form-control" placeholder="Amount period" style="width: 80px;"/>
-                    <form:input path="authPercent" type="text" class="form-control" placeholder="Authorization percent" style="width: 80px;"/>
+                    <form:input path="authPercent" type="text" class="form-control" placeholder="Auth percent" style="width: 80px;"/>
                     <form:input path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
                     <form:input path="contractId" type="hidden" value="0"/>
-
-                    <input id="add-button" class="btn btn-primary" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
                 </form:form>
+
+                <input id="add-button" class="btn btn-primary" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
 
             </div>
         </div>

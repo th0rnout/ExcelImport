@@ -121,14 +121,24 @@ input.filename
 {
     margin-top: 5px;
     border-top: 2px solid #ddd;
-    padding-top: 10px;
+}
+.new-form form
+{
+    display: inline-block;
 }
 .new-form input
 {
     display: inline-block;
+    margin-top: 10px;
 }
 .new-form input[type="submit"]
 {
+    vertical-align: top;
+    margin-left: 10px;
+}
+#add-button
+{
+    display: inline-block;
     vertical-align: top;
     margin-left: 10px;
 }
