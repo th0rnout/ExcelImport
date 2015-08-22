@@ -30,6 +30,7 @@
                 <input type="file" name="excel" accept=".xlsx" />
                 <input type="submit" value="Submit"/>
             </form:form>
+            <div class="error">${error}</div>
         </div>
 
         <table id="table">
@@ -67,12 +68,12 @@
             </tbody>
         </table>
 
-        <form:form id="form" commandName="row">
+        <form:form id="form" commandName="row" style="display: inline-table;">
             <form:input path="system" type="text" placeholder="System"/>
             <form:input path="request" type="text" placeholder="Request"/>
             <form:input path="orderNumber" type="text" placeholder="Order number"/>
-            <form:input path="fromDate" type="text" placeholder="From date"/>
-            <form:input path="toDate" type="text" placeholder="To date"/>
+            <form:input path="fromDate" type="date" placeholder="From date"/>
+            <form:input path="toDate" type="date" placeholder="To date"/>
             <form:input path="amount" type="text" placeholder="Amount"/>
             <form:input path="amountType" type="text" placeholder="Amount type"/>
             <form:input path="amountPeriod" type="text" placeholder="Amount period"/>
