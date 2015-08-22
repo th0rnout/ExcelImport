@@ -65,7 +65,10 @@ public class FileController
             /////////
             if (parsedFile != null) {
                 if(db.validateFile(parsedFile))
+                {
                     db.handleFile(parsedFile);
+                    model.addObject("success", "Upload successful!");
+                }
                 else {
                     System.out.println("Incorrect structure: System not found.");
                     model.addObject("error", "Invalid structure: System not found");
@@ -79,7 +82,7 @@ public class FileController
         else
         {
             System.out.println("Wrong content type: " + file.getContentType());
-            model.addObject("error", "Wrong content type: " + file.getContentType());
+            model.addObject("error", "Wrong file type. Only files of type XLS and XLSX are allowed.");
         }
 
         ArrayList<SystemContract> list = db.getContracts();

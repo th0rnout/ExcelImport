@@ -39,7 +39,14 @@
                     </form:form>
                 </div>
 
-                <div class="error">${error}</div>
+                <div class="alert alert-success" style="display: none;">
+                    <div style="font-size: 18px;"><span id="success-msg">${success}</span></div>
+                </div>
+
+                <div class="alert alert-danger" style="display: none;">
+                    <div style="font-size: 18px;"><strong>Error!</strong> <span id="error-msg">${error}</span></div>
+                </div>
+
             </div>
 
             <div class="row">
@@ -72,7 +79,7 @@
                                 <td>${row.amountPeriod}</td>
                                 <td>${row.authPercent}</td>
                                 <td>${row.active}</td>
-                                <td><a href="javascript:;" onclick="deleteRow(this)" data-id="${row.contractId}"><button class="btn btn-danger btn-xs">Delete</button></a></td>
+                                <td><a href="javascript:;" onclick="confirmDeletion(${row.contractId})" data-id="${row.contractId}"><button class="btn btn-danger btn-xs">Delete</button></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -99,6 +106,30 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div id="deleteRowModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <div id="toDelete"></div>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Warning</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this row?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" onclick="deleteRow($('#toDelete').html())">Delete</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
 
 
 
@@ -122,12 +153,33 @@
                 });
             });
 
-            function deleteRow(item)
+            $(function()
+            {
+                if ($.trim( $('#error-msg').html() ).length) {
+                    {
+                        $(".alert-danger").css("display", "block");
+                    }
+                }
+
+                if ($.trim( $('#success-msg').html() ).length) {
+                    {
+                        $(".alert-success").css("display", "block");
+                    }
+                }
+            });
+
+            function confirmDeletion(index)
+            {
+                $("#deleteRowModal #toDelete").html(index);
+                $("#deleteRowModal").modal();
+            }
+
+            function deleteRow(index)
             {
                 $.ajax({
                     method: 'POST',
                     url: 'deleteRow',
-                    data: {id: $(item).data("id")},
+                    data: {id: index},
                     success: function()
                     {
                         window.location.href = "./";
