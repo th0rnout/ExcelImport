@@ -89,13 +89,13 @@
             <div class="row new-form">
                 <form:form class="form-inline" role="form" id="form" commandName="row">
                     <div class="form-group">
-                        <form:input data-type="string" path="system" type="text" class="form-control" placeholder="System" style="width: 80px;"/>
+                        <form:input data-type="string" data-length="50" path="system" type="text" class="form-control" placeholder="System" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="string" path="request" type="text" class="form-control" placeholder="Request" style="width: 80px;"/>
+                        <form:input data-type="string" data-length="12" path="request" type="text" class="form-control" placeholder="Request" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="string" path="orderNumber" type="text" class="form-control" placeholder="Order number" style="width: 120px;"/>
+                        <form:input data-type="string" data-length="12" path="orderNumber" type="text" class="form-control" placeholder="Order number" style="width: 120px;"/>
                     </div>
                     <div class="form-group">
                         <form:input data-type="date" path="fromDate" type="date" class="form-control" placeholder="From date" style="width: 160px;"/>
@@ -107,13 +107,13 @@
                         <form:input data-type="float" path="amount" type="text" class="form-control" placeholder="Amount" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="string" path="amountType" type="text" class="form-control" placeholder="Amount type" style="width: 80px;"/>
+                        <form:input data-type="string" data-length="5" path="amountType" type="text" class="form-control" placeholder="Am. type" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="string" path="amountPeriod" type="text" class="form-control" placeholder="Amount period" style="width: 80px;"/>
+                        <form:input data-type="string" data-length="5" path="amountPeriod" type="text" class="form-control" placeholder="Am. period" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="float" path="authPercent" type="text" class="form-control" placeholder="Auth percent" style="width: 80px;"/>
+                        <form:input data-type="float" path="authPercent" type="text" class="form-control" placeholder="Auth %" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
                         <form:input data-type="string" path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
@@ -126,7 +126,7 @@
                 <input id="add-button" class="btn btn-primary" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
 
                 <div id="row-error" class="alert alert-danger" style="display: none;">
-                    <div><strong>Error!</strong> <span>Correct marked fields to proceed.</span></div>
+                    <div><strong>Error!</strong> <span></span></div>
                 </div>
 
             </div>
@@ -215,9 +215,12 @@
                          type:"POST",
                          data: $("#form").serialize(),
                          url:"saveOrUpdateRow",
-                         success: function()
+                         success: function(msg)
                          {
-                            window.location.reload(true);
+                             if(msg == "success")
+                                 window.location.reload(true);
+                             if(msg == "system-error")
+                                 showSystemError();
                          }
                      });
                 }
@@ -231,10 +234,14 @@
 
                 var valid = true;
 
+                $("#row-error").css({display: "none"});
+                $("#row-error span").html("Correct marked fields to proceed.<br />");
+
                 for(var i = 0; i < array.length; i++)
                 {
                     var type = $(array[i]).children().first().data("type");
                     var value = $(array[i]).children().first().val();
+                    var name = $(array[i]).children().first().attr('placeholder');
 
 
                     if(type == "string")
@@ -242,12 +249,23 @@
                         if(value == "") {
                             $(array[i]).removeClass("has-success");
                             $(array[i]).addClass("has-error");
+                            $("#row-error span").append("Field " + name + " cannot be empty.<br />");
                             valid = false;
                         }
                         else
                         {
-                            $(array[i]).removeClass("has-error");
-                            $(array[i]).addClass("has-success");
+                            if(value.length > $(array[i]).children().first().data('length'))
+                            {
+                                var max = $(array[i]).children().first().data('length');
+
+                                $(array[i]).removeClass("has-success");
+                                $(array[i]).addClass("has-error");
+                                $("#row-error span").append("Field " + name + " cannot be longer than " + max + " characters<br />");
+                            }
+                            else {
+                                $(array[i]).removeClass("has-error");
+                                $(array[i]).addClass("has-success");
+                            }
                         }
 
                     }
@@ -256,6 +274,7 @@
                         if(isNaN(value)) {
                             $(array[i]).removeClass("has-success");
                             $(array[i]).addClass("has-error");
+                            $("#row-error span").append("Field " + name + " has to be a number.<br />");
                             valid = false;
                         }
                         else
@@ -269,6 +288,7 @@
                         if(!value) {
                             $(array[i]).removeClass("has-success");
                             $(array[i]).addClass("has-error");
+                            $("#row-error span").append("Field " + name + " cannot be empty.<br />");
                             valid = false;
                         }
                         else
@@ -283,6 +303,14 @@
                     $("#row-error").slideDown();
 
                 return valid;
+            }
+
+            function showSystemError()
+            {
+                $("#row-error").css({display: "none"});
+                $("#row-error span").html("Specified system was not found in database");
+                $("#row-error").slideDown();
+
             }
 
 

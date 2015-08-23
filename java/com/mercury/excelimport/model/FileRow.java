@@ -4,19 +4,42 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
+
 /**
  * Created by Fedake on 2015-08-20.
  */
 public class FileRow
 {
+    @NotEmpty
+    @Size(max = 50)
     private String system;
+
+    @NotEmpty
+    @Size(max = 12)
     private String request;
+
+    @NotEmpty
+    @Size(max = 12)
     private String orderNumber;
+
     private Date fromDate;
     private Date toDate;
+
     private float amount;
+
+    @NotEmpty
+    @Size(max = 5)
     private String amountType;
+
+    @NotEmpty
+    @Size(max = 5)
     private String amountPeriod;
+
     private float authPercent;
     private boolean active;
     private int contractId;

@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -119,20 +118,32 @@ public class FileController
 
         this.db.deleteRow(id);
 
-        return "debug.jsp";
+        return "ajax.jsp";
     }
 
 
     @RequestMapping(value = "/saveOrUpdateRow")
-    public String saveOrUpdateRow(@ModelAttribute("row") FileRow row,
+    public ModelAndView saveOrUpdateRow(@Valid @ModelAttribute("row") FileRow row,
                          BindingResult errors, HttpServletRequest request)
     {
+        ModelAndView model = new ModelAndView("ajax.jsp");
+
         System.out.println(row.getToDate());
 
-        if(this.db.validateRow(row))
-            this.db.handleRow(row);
+        if(!errors.hasErrors()) {
+            if (this.db.validateRow(row))
+            {
+                this.db.handleRow(row);
+                model.addObject("result", "success");
+            }
+            else
+                model.addObject("result", "system-error");
 
-        return "debug.jsp";
+        }
+        else
+            model.addObject("result", "error");
+
+        return model;
     }
 
     public ArrayList<FileRow> convertContracts(ArrayList<SystemContract> list)
