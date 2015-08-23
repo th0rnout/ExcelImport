@@ -39,11 +39,11 @@
                     </form:form>
                 </div>
 
-                <div class="alert alert-success" style="display: none;">
+                <div id="upload-success" class="alert alert-success" style="display: none;">
                     <div style="font-size: 18px;"><span id="success-msg">${success}</span></div>
                 </div>
 
-                <div class="alert alert-danger" style="display: none;">
+                <div id="upload-error" class="alert alert-danger" style="display: none;">
                     <div style="font-size: 18px;"><strong>Error!</strong> <span id="error-msg">${error}</span></div>
                 </div>
 
@@ -79,7 +79,7 @@
                                 <td>${row.amountPeriod}</td>
                                 <td>${row.authPercent}</td>
                                 <td>${row.active}</td>
-                                <td><a href="javascript:;" onclick="confirmDeletion(${row.contractId})" data-id="${row.contractId}"><button class="btn btn-danger btn-xs">Delete</button></a></td>
+                                <td><a href="javascript:;" onclick="confirmDeletion(${row.contractId}, event)" data-id="${row.contractId}"><button class="btn btn-danger btn-xs">Delete</button></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -87,30 +87,55 @@
             </div>
 
             <div class="row new-form">
-                <form:form id="form" commandName="row">
-                    <form:input path="system" type="text" class="form-control" placeholder="System" style="width: 80px;"/>
-                    <form:input path="request" type="text" class="form-control" placeholder="Request" style="width: 80px;"/>
-                    <form:input path="orderNumber" type="text" class="form-control" placeholder="Order number" style="width: 120px;"/>
-                    <form:input path="fromDate" type="date" class="form-control" placeholder="From date" style="width: 160px;"/>
-                    <form:input path="toDate" type="date" class="form-control" placeholder="To date" style="width: 160px;"/>
-                    <form:input path="amount" type="text" class="form-control" placeholder="Amount" style="width: 80px;"/>
-                    <form:input path="amountType" type="text" class="form-control" placeholder="Amount type" style="width: 80px;"/>
-                    <form:input path="amountPeriod" type="text" class="form-control" placeholder="Amount period" style="width: 80px;"/>
-                    <form:input path="authPercent" type="text" class="form-control" placeholder="Auth percent" style="width: 80px;"/>
-                    <form:input path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
-                    <form:input path="contractId" type="hidden" value="0"/>
+                <form:form class="form-inline" role="form" id="form" commandName="row">
+                    <div class="form-group">
+                        <form:input data-type="string" path="system" type="text" class="form-control" placeholder="System" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="string" path="request" type="text" class="form-control" placeholder="Request" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="string" path="orderNumber" type="text" class="form-control" placeholder="Order number" style="width: 120px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="date" path="fromDate" type="date" class="form-control" placeholder="From date" style="width: 160px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="date" path="toDate" type="date" class="form-control" placeholder="To date" style="width: 160px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="float" path="amount" type="text" class="form-control" placeholder="Amount" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="string" path="amountType" type="text" class="form-control" placeholder="Amount type" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="string" path="amountPeriod" type="text" class="form-control" placeholder="Amount period" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="float" path="authPercent" type="text" class="form-control" placeholder="Auth percent" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="string" path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
+                    </div>
+                    <div class="form-group">
+                        <form:input data-type="string" path="contractId" type="hidden" value="0"/>
+                    </div>
                 </form:form>
 
                 <input id="add-button" class="btn btn-primary" type="submit" value="Add" onclick="saveOrUpdateRow(this)"/>
+
+                <div id="row-error" class="alert alert-danger" style="display: none;">
+                    <div><strong>Error!</strong> <span>Correct marked fields to proceed.</span></div>
+                </div>
 
             </div>
         </div>
 
         <!-- Modal -->
-        <div id="deleteRowModal" class="modal fade" role="dialog">
+        <div id="deleteRowModal" class="modal fade" role="dialog" data-id="-1">
             <div class="modal-dialog">
 
-                <div id="toDelete"></div>
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -121,7 +146,7 @@
                         <p>Are you sure you want to delete this row?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" onclick="deleteRow($('#toDelete').html())">Delete</button>
+                        <button type="button" class="btn btn-warning" onclick="deleteRow($('#deleteRowModal').data('id'))">Delete</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -142,12 +167,17 @@
                     ]
                 });
 
-                /*
-                $(".row").click(function() {
-                    $(this).children().each(function (index, item) {
-                        $(item).html('<input type="text" value="'+$(item).html()+'"/>');
-                    })
-                });*/
+                if ($.trim( $('#error-msg').html() ).length) {
+                    {
+                        $("#upload-error").css("display", "block");
+                    }
+                }
+
+                if ($.trim( $('#success-msg').html() ).length) {
+                    {
+                        $("#upload-success").css("display", "block");
+                    }
+                }
             });
 
             $(function() {
@@ -157,25 +187,11 @@
                 });
             });
 
-            $(function()
+            function confirmDeletion(index, event)
             {
-                if ($.trim( $('#error-msg').html() ).length) {
-                    {
-                        $(".alert-danger").css("display", "block");
-                    }
-                }
+                event.stopPropagation();
 
-                if ($.trim( $('#success-msg').html() ).length) {
-                    {
-                        $(".alert-success").css("display", "block");
-                    }
-                }
-            });
-
-            function confirmDeletion(index)
-            {
-                $("#deleteRowModal #toDelete").html(index);
-                $("#deleteRowModal").modal();
+                $("#deleteRowModal").data("id", index).modal();
             }
 
             function deleteRow(index)
@@ -186,33 +202,89 @@
                     data: {id: index},
                     success: function()
                     {
-                        window.location.href = "./";
+                        window.location.reload(true);
                     }
                 });
             }
 
             function saveOrUpdateRow(item)
             {
-                alert($("#form").serialize());
-
-                $.ajax({
-                    type:"POST",
-                    data: $("#form").serialize(),
-                    url:"saveOrUpdateRow",
-                    success: function()
-                    {
-                        window.location.href = "./";
-                    }
-                });
-
-
-                $("#contract-id").val(0);
-                $("#add-button").val("Add");
-                $("#form").children().each(function(item)
+                if(validateForm())
                 {
-                    $(item).val('');
-                })
+                     $.ajax({
+                         type:"POST",
+                         data: $("#form").serialize(),
+                         url:"saveOrUpdateRow",
+                         success: function()
+                         {
+                            window.location.reload(true);
+                         }
+                     });
+                }
+
+
             }
+
+            function validateForm()
+            {
+                var array = $("#form").children().toArray();
+
+                var valid = true;
+
+                for(var i = 0; i < array.length; i++)
+                {
+                    var type = $(array[i]).children().first().data("type");
+                    var value = $(array[i]).children().first().val();
+
+
+                    if(type == "string")
+                    {
+                        if(value == "") {
+                            $(array[i]).removeClass("has-success");
+                            $(array[i]).addClass("has-error");
+                            valid = false;
+                        }
+                        else
+                        {
+                            $(array[i]).removeClass("has-error");
+                            $(array[i]).addClass("has-success");
+                        }
+
+                    }
+                    else if(type == "float")
+                    {
+                        if(isNaN(value)) {
+                            $(array[i]).removeClass("has-success");
+                            $(array[i]).addClass("has-error");
+                            valid = false;
+                        }
+                        else
+                        {
+                            $(array[i]).removeClass("has-error");
+                            $(array[i]).addClass("has-success");
+                        }
+                    }
+                    else if(type == "date")
+                    {
+                        if(!value) {
+                            $(array[i]).removeClass("has-success");
+                            $(array[i]).addClass("has-error");
+                            valid = false;
+                        }
+                        else
+                        {
+                            $(array[i]).removeClass("has-error");
+                            $(array[i]).addClass("has-success");
+                        }
+                    }
+                }
+
+                if(!valid)
+                    $("#row-error").slideDown();
+
+                return valid;
+            }
+
 
             function rowClick(item)
             {
@@ -224,7 +296,7 @@
 
                 for(var i = 0; i < 10; i++)
                 {
-                    $(inputs[i]).val($(cells[i]).html());
+                    $(inputs[i]).children().first().val($(cells[i]).html());
                 }
             }
         </script>

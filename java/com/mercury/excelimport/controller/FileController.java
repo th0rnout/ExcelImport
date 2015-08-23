@@ -122,19 +122,6 @@ public class FileController
         return "debug.jsp";
     }
 
-    @RequestMapping(value = "/addRow")
-    public String addRow(@ModelAttribute("row") FileRow row,
-                         BindingResult errors, HttpServletRequest request)
-    {
-        System.out.println(row.getSystem());
-
-        if(this.db.validateRow(row))
-            this.db.handleRow(row);
-
-        return "debug.jsp";
-    }
-
-
 
     @RequestMapping(value = "/saveOrUpdateRow")
     public String saveOrUpdateRow(@ModelAttribute("row") FileRow row,
