@@ -14,10 +14,12 @@
 
 		<multipart-config>
 			<location>/</location>
-			<max-file-size>200000</max-file-size>
-			<max-request-size>800000</max-request-size>
-			<file-size-threshold>100000</file-size-threshold>
+			<max-file-size>102400</max-file-size>
+			<max-request-size>102400</max-request-size>
+			<file-size-threshold>102400</file-size-threshold>
 		</multipart-config>
+
+
 	</servlet>
 
 	<servlet-mapping>

@@ -6,26 +6,36 @@ import com.mercury.excelimport.model.SystemContract;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.NestedExceptionUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
+import javax.naming.SizeLimitExceededException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
-public class FileController
+public class FileController implements HandlerExceptionResolver
 {
     private DBConnector db;
     private FileParser parser;
@@ -40,8 +50,8 @@ public class FileController
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView handleFormUpload(@RequestParam("excel") MultipartFile file) {
-
+    public ModelAndView handleFormUpload(@RequestParam("excel") MultipartFile file) throws SizeLimitExceededException
+    {
         ModelAndView model = new ModelAndView("index.jsp");
 
         if (!file.isEmpty()
@@ -60,7 +70,6 @@ public class FileController
             com.mercury.excelimport.model.File parsedFile = parser.parse(stream);
 
             /////////
-            // TODO: Support .xls files (HSSFWorkbook)
             // TODO: Tell user what went wrong while parsing
             /////////
             if (parsedFile != null) {
@@ -147,6 +156,40 @@ public class FileController
 
         return "debug.jsp";
     }
+
+    /*** Trap Exceptions during the upload and show errors back in view form ***/
+    public ModelAndView resolveException(HttpServletRequest request,
+                                         HttpServletResponse response, Object handler, Exception exception)
+    {
+
+        ModelAndView model = new ModelAndView("index.jsp");
+
+        if (exception instanceof MaxUploadSizeExceededException ||
+                exception instanceof MultipartException)
+        {
+            if (exception instanceof MaxUploadSizeExceededException ||
+                    ExceptionUtils.getRootCause(exception).toString().contains("SizeLimitExceededException"))
+                model.addObject("error", "Uploaded file is too big. Maximum file size is 100 kB.");
+            else
+                model.addObject("error", "Unexpected error: " + exception.getMessage());
+        }
+        else
+        {
+            model.addObject("error", "Unexpected error: " + exception.getMessage());
+        }
+
+        ArrayList<SystemContract> list = db.getContracts();
+        if (list != null)
+        {
+            ArrayList<FileRow> rows = convertContracts(list);
+            model.addObject("rows", rows);
+        }
+
+        model.addObject("row", new FileRow());
+
+        return model;
+    }
+
 
     public ArrayList<FileRow> convertContracts(ArrayList<SystemContract> list)
     {

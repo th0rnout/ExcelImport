@@ -23,11 +23,8 @@
                 <div class="col-lg-2 vcenter">
                     <!--<h2>ExcelImport project for</h2>-->
                     <img src="http://www.bluesoft.net.pl/wp-content/uploads/2013/12/logo4.png"/>
-                </div><!--
-                <!------
-                -- TODO: Handle file size exception
-                -------
-                -->
+                </div>
+
                 <div class="col-lg-4 vcenter excel-input">
                     <p>Choose an Excel file to import:</p>
                     <form:form method="POST" action="/" enctype="multipart/form-data">
