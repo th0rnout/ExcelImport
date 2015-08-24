@@ -199,7 +199,7 @@
                     data: {id: index},
                     success: function()
                     {
-                        window.location.reload(true);
+                        window.location.href = './';
                     }
                 });
             }
@@ -215,7 +215,7 @@
                          success: function(msg)
                          {
                              if(msg == "success")
-                                 window.location.reload(true);
+                                 window.location.href = './';
                              if(msg == "system-error")
                                  showSystemError();
                          }
