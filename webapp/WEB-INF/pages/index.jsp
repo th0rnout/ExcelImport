@@ -1,7 +1,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
 <html>
     <head>
         <title>ExcelImport for Bluesoft</title>
@@ -25,6 +25,9 @@
                     <img src="http://www.bluesoft.net.pl/wp-content/uploads/2013/12/logo4.png"/>
                 </div>
 
+                <div class="col-lg-1 vcenter">
+                    <input type="submit" class="btn btn-primary" value="Info" onclick="$('#infoModal').modal();">
+                </div>
                 <div class="col-lg-4 vcenter excel-input">
                     <p>Choose an Excel file to import:</p>
                     <form:form method="POST" action="./" enctype="multipart/form-data">
@@ -151,6 +154,36 @@
             </div>
         </div>
 
+        <div id="infoModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Info</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Autorzy:
+                            <ul>
+                                <li>Daniel Baczkowski</li>
+                                <li>Jakub Stępień</li>
+                            </ul>
+                        </p>
+                        <p>Aplikacja WEB, frontend wykonany z użyciem JSP, HTML 5, jQuery oraz Bootstrap.
+                            Całość wykonana z użyciem frameworka Spring MVC. Warstwa DAO z użyciem Hibernate,
+                            baza danych PostgreSQL. Aplikacja budowana Maven, osadzona na serwerze aplikacyjnym Tomcat.
+                            Do parsowania plików XLS i XLSX użyta biblioteka Apache POI.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
 
 
 
@@ -158,6 +191,8 @@
 
         <script>
             $(document).ready(function() {
+
+
                 $("#table").dataTable({
                     "aoColumnDefs": [
                         { 'bSortable': false, 'aTargets': [ 10 ] }
