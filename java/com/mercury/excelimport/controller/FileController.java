@@ -65,9 +65,7 @@ public class FileController implements HandlerExceptionResolver
 
             com.mercury.excelimport.model.File parsedFile = parser.parse(stream);
 
-            /////////
-            // TODO: Tell user what went wrong while parsing
-            /////////
+
             if (parsedFile != null) {
                 if(db.validateFile(parsedFile))
                 {
@@ -89,7 +87,9 @@ public class FileController implements HandlerExceptionResolver
         else
         {
             System.out.println("Wrong content type: " + file.getContentType());
-            model.addObject("error", "Wrong file type. Only files of type XLS and XLSX are allowed.");
+            ArrayList<String> errors = new ArrayList<String>();
+            errors.add("Wrong file type. Only files of type XLS and XLSX are allowed.");
+            model.addObject("errors", errors);
         }
 
         ArrayList<SystemContract> list = db.getContracts();

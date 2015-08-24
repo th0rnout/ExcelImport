@@ -5,7 +5,7 @@
     http://java.sun.com/xml/ns/javaee
     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-	<display-name>Spring MVC Application</display-name>
+	<display-name>ExcelImport for Bluesoft</display-name>
 
     <servlet>
 		<servlet-name>excelimport</servlet-name>

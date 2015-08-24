@@ -5,6 +5,9 @@
 <html>
     <head>
         <title>ExcelImport for Bluesoft</title>
+
+        <meta charset="UTF-8">
+
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.8/datatables.min.css"/>
 
         <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
@@ -25,9 +28,7 @@
                     <img src="http://www.bluesoft.net.pl/wp-content/uploads/2013/12/logo4.png"/>
                 </div>
 
-                <div class="col-lg-1 vcenter">
-                    <input type="submit" class="btn btn-primary" value="Info" onclick="$('#infoModal').modal();">
-                </div>
+
                 <div class="col-lg-4 vcenter excel-input">
                     <p>Choose an Excel file to import:</p>
                     <form:form method="POST" action="./" enctype="multipart/form-data">
@@ -37,6 +38,10 @@
                         <input type="text" class="form-control filename" disabled/>
                         <input type="submit" class="btn btn-primary" value="Submit">
                     </form:form>
+                </div>
+
+                <div class="col-lg-1 vcenter" style="padding-top: 25px; text-align: center;">
+                    <input type="submit" class="btn btn-success" value="Info" onclick="$('#infoModal').modal();">
                 </div>
 
                 <div id="upload-success" class="alert alert-success" style="display: none;">
@@ -179,10 +184,18 @@
                                 <li>Jakub Stępień</li>
                             </ul>
                         </p>
-                        <p>Aplikacja WEB, frontend wykonany z użyciem JSP, HTML 5, jQuery oraz Bootstrap.
-                            Całość wykonana z użyciem frameworka Spring MVC. Warstwa DAO z użyciem Hibernate,
-                            baza danych PostgreSQL. Aplikacja budowana Maven, osadzona na serwerze aplikacyjnym Tomcat.
-                            Do parsowania plików XLS i XLSX użyta biblioteka Apache POI.</p>
+                        <p>
+                            Użyte technologie:
+                            <ul>
+                                <li>Apache Tomcat/8.0.26</li>
+                                <li>Maven 4.0.0</li>
+                                <li>Spring MVC 4.1.1.RELEASE</li>
+                                <li>Hibernate 5.0.0.CR4</li>
+                                <li>PostgreSQL 9.4-1201-jdbc41</li>
+                                <li>Apache POI 3.13-beta1</li>
+                                <li>Bootstrap 3.2.0 / 3.3.5</li>
+                            </ul>
+                        </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
