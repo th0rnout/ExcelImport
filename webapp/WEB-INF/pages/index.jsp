@@ -356,7 +356,7 @@
                         {
                             $(array[i]).removeClass("has-success");
                             $(array[i]).addClass("has-error");
-                            $("#row-error span").append("Field " + name + " has to be of logical type .<br />");
+                            $("#row-error span").append("Field " + name + " has to be of logical type.<br />");
                             valid = false;
                         }
                         else

@@ -166,13 +166,23 @@ public class FileController implements HandlerExceptionResolver
         {
             if (exception instanceof MaxUploadSizeExceededException ||
                     ExceptionUtils.getRootCause(exception).toString().contains("SizeLimitExceededException"))
-                model.addObject("error", "Uploaded file is too big. Maximum file size is 100 kB.");
+            {
+                ArrayList<String> errors = new ArrayList<String>();
+                errors.add("Uploaded file is too big. Maximum file size is 100 kB.");
+                model.addObject("errors", errors);
+            }
             else
-                model.addObject("error", "Unexpected error: " + exception.getMessage());
+            {
+                ArrayList<String> errors = new ArrayList<String>();
+                errors.add("Unexpected error: " + exception.getMessage());
+                model.addObject("errors", errors);
+            }
         }
         else
         {
-            model.addObject("error", "Unexpected error: " + exception.getMessage());
+            ArrayList<String> errors = new ArrayList<String>();
+            errors.add("Unexpected error: " + exception.getMessage());
+            model.addObject("errors", errors);
         }
 
         ArrayList<SystemContract> list = db.getContracts();

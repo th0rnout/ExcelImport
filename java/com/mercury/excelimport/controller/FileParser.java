@@ -51,7 +51,68 @@ public class FileParser
             org.apache.poi.ss.usermodel.Row row = rowIterator.next();
 
             if (row.getRowNum() == 0)
+            {
+                boolean rightFile = true;
+
+                if (row.getCell(0) == null || !row.getCell(0).toString().equals("system"))
+                {
+                    System.out.println("wrong 0");
+                    rightFile = false;
+                }
+                if (row.getCell(1) == null || !row.getCell(1).toString().equals("request"))
+                {
+                    System.out.println("wrong 1");
+                    rightFile = false;
+                }
+                if (row.getCell(2) == null || !row.getCell(2).toString().equals("order_number")) {
+                    System.out.println("wrong 2");
+                    rightFile = false;
+                }
+                if (row.getCell(3) == null || !row.getCell(3).toString().equals("from_date"))
+                {
+                    System.out.println("wrong 3");
+                    rightFile = false;
+                }
+                if (row.getCell(4) == null || !row.getCell(4).toString().equals("to_date"))
+                {
+                    System.out.println("wrong 4");
+                    rightFile = false;
+                }
+                if (row.getCell(5) == null || !row.getCell(5).toString().equals("amount"))
+                {
+                    System.out.println("wrong 5");
+                    rightFile = false;
+                }
+                if (row.getCell(6) == null || !row.getCell(6).toString().equals("amount_type"))
+                {
+                    System.out.println("wrong 6");
+                    rightFile = false;
+                }
+                if (row.getCell(7) == null || !row.getCell(7).toString().equals("amount_period"))
+                {
+                    System.out.println("wrong 7");
+                    rightFile = false;
+                }
+                if (row.getCell(8) == null || !row.getCell(8).toString().equals("authorization_percent"))
+                {
+                    System.out.println("wrong 8");
+                    rightFile = false;
+                }
+                if (row.getCell(9) == null || !row.getCell(9).toString().equals("active"))
+                {
+                    System.out.println("wrong 9");
+                    rightFile = false;
+                }
+
+                if (!rightFile)
+                {
+                    errors.add("wrong file structure.");
+                    return null;
+                }
+
                 continue;
+            }
+
 
             String system = row.getCell(0).toString();
             if (system.length() > 50)
