@@ -129,7 +129,7 @@
                         <form:input data-type="float" path="authPercent" type="text" class="form-control" placeholder="Auth %" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="string" path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
+                        <form:input data-type="boolean" path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
                         <form:input id="contract-id" data-type="string" path="contractId" type="hidden" value="0"/>
@@ -342,6 +342,21 @@
                             $(array[i]).removeClass("has-success");
                             $(array[i]).addClass("has-error");
                             $("#row-error span").append("Field " + name + " cannot be empty.<br />");
+                            valid = false;
+                        }
+                        else
+                        {
+                            $(array[i]).removeClass("has-error");
+                            $(array[i]).addClass("has-success");
+                        }
+                    }
+                    else if(type == "boolean")
+                    {
+                        if(value != "true" && value != "false" && value != "1" && value != "0")
+                        {
+                            $(array[i]).removeClass("has-success");
+                            $(array[i]).addClass("has-error");
+                            $("#row-error span").append("Field " + name + " has to be of logical type .<br />");
                             valid = false;
                         }
                         else
