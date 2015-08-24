@@ -3,35 +3,31 @@ package com.mercury.excelimport.controller;
 import com.mercury.excelimport.DBConnector;
 import com.mercury.excelimport.model.FileRow;
 import com.mercury.excelimport.model.SystemContract;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.NestedExceptionUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 import javax.naming.SizeLimitExceededException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URI;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -128,33 +124,32 @@ public class FileController implements HandlerExceptionResolver
 
         this.db.deleteRow(id);
 
-        return "debug.jsp";
+        return "ajax.jsp";
     }
-
-    @RequestMapping(value = "/addRow")
-    public String addRow(@ModelAttribute("row") FileRow row,
-                         BindingResult errors, HttpServletRequest request)
-    {
-        System.out.println(row.getSystem());
-
-        if(this.db.validateRow(row))
-            this.db.handleRow(row);
-
-        return "debug.jsp";
-    }
-
 
 
     @RequestMapping(value = "/saveOrUpdateRow")
-    public String saveOrUpdateRow(@ModelAttribute("row") FileRow row,
+    public ModelAndView saveOrUpdateRow(@Valid @ModelAttribute("row") FileRow row,
                          BindingResult errors, HttpServletRequest request)
     {
+        ModelAndView model = new ModelAndView("ajax.jsp");
+
         System.out.println(row.getToDate());
 
-        if(this.db.validateRow(row))
-            this.db.handleRow(row);
+        if(!errors.hasErrors()) {
+            if (this.db.validateRow(row))
+            {
+                this.db.handleRow(row);
+                model.addObject("result", "success");
+            }
+            else
+                model.addObject("result", "system-error");
 
-        return "debug.jsp";
+        }
+        else
+            model.addObject("result", "error");
+
+        return model;
     }
 
     /*** Trap Exceptions during the upload and show errors back in view form ***/
