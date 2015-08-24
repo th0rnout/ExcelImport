@@ -41,7 +41,15 @@
                 </div>
 
                 <div id="upload-error" class="alert alert-danger" style="display: none;">
-                    <div style="font-size: 18px;"><strong>Error!</strong> <span id="error-msg">${error}</span></div>
+
+                    <span id="error-msg">
+                        <c:forEach items="${errors}" var="error">
+
+                                <div style="font-size: 18px;"><strong>Error!</strong> ${error} </div>
+
+                        </c:forEach>
+                    </span>
+
                 </div>
 
             </div>

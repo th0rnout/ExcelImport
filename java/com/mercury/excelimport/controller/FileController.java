@@ -76,12 +76,14 @@ public class FileController implements HandlerExceptionResolver
                 }
                 else {
                     System.out.println("Incorrect structure: System not found.");
-                    model.addObject("error", "Invalid structure: System not found");
+                    ArrayList<String> errors = new ArrayList<String>();
+                    errors.add("Invalid structure: System not found");
+                    model.addObject("errors", errors);
                 }
             }
             else {
                 System.out.println("File could not be parsed.");
-                model.addObject("error", "File could not be parsed.");
+                model.addObject("errors", parser.getErrors());
             }
         }
         else
