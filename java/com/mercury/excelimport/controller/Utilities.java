@@ -26,4 +26,14 @@ public class Utilities
             return false;
         }
     }
+
+    public static boolean tryParseBoolean(String value)
+    {
+        try {
+            Boolean.parseBoolean(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

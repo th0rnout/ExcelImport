@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -22,8 +23,12 @@ import java.util.Iterator;
 @Component
 public class FileParser
 {
+    private ArrayList<String> errors = new ArrayList<String>();
+
     public File parse(InputStream stream)
     {
+        errors.clear();
+
         Workbook wb = null;
         try {
             wb = WorkbookFactory.create(stream);
@@ -49,51 +54,87 @@ public class FileParser
                 continue;
 
             String system = row.getCell(0).toString();
-            String request = row.getCell(1).toString();
-            String orderNumber = row.getCell(2).toString();
+            if (system.length() > 50)
+                errors.add("system is too long. Maximum length is 50 characters.");
 
-            java.util.Date fromDate;
+            String request = row.getCell(1).toString();
+            if (request.length() > 12)
+                errors.add("request is too long. Maximum length is 12 characters.");
+
+            String orderNumber = row.getCell(2).toString();
+            if (orderNumber.length() > 12)
+                errors.add("order_number is too long. Maximum length is 12 characters.");
+
+            java.util.Date fromDate = null;
             if (Utilities.tryParseCellDate(row.getCell(3)))
                 fromDate = row.getCell(3).getDateCellValue();
             else {
                 System.out.println("Parse error: fromDate is of type: " + row.getCell(3).getCellType());
-                return null;
+                errors.add("wrong from_date type.");
             }
 
-            java.util.Date toDate;
+            java.util.Date toDate = null;
             if (Utilities.tryParseCellDate(row.getCell(4)))
                 toDate = row.getCell(4).getDateCellValue();
             else {
                 System.out.println("Parse error: toDate is of type: " + row.getCell(4).getCellType());
-                return null;
+                errors.add("wrong to_date type.");
             }
 
-            float amount;
+            float amount = 0;
             if (Utilities.tryParseFloat(row.getCell(5).toString()))
                 amount = Float.parseFloat(row.getCell(5).toString());
             else {
                 System.out.println("Parse error: amount is of type: " + row.getCell(5).getCellType());
-                return null;
+                errors.add("wrong amount type.");
             }
 
             String amountType = row.getCell(6).toString();
-            String amountPeriod = row.getCell(7).toString();
+            if (amountType.length() > 5)
+                errors.add("amount_type is too long. Maximum length is 5 characters.");
 
-            float authPercent;
+            String amountPeriod = row.getCell(7).toString();
+            if (amountPeriod.length() > 5)
+                errors.add("amount_period is too long. Maximum length is 5 characters.");
+
+            float authPercent = 0;
             if (Utilities.tryParseFloat(row.getCell(8).toString()))
                 authPercent = Float.parseFloat(row.getCell(8).toString());
-            else {
+            else
+            {
                 System.out.println("Parse error: authPercent is of type: " + row.getCell(8).getCellType());
-                return null;
+                errors.add("wrong authorization_percent type.");
             }
 
-            String active = row.getCell(9).toString();
+            Boolean active = false;
+            if (Utilities.tryParseBoolean(row.getCell(9).toString()))
+                active = Utilities.tryParseBoolean(row.getCell(9).toString());
+            else
+            {
+                System.out.println("Parse error: active is of type: " + row.getCell(9).getCellType());
+                errors.add("wrong active type.");
+            }
 
             file.addRow(new FileRow(system, request, orderNumber, fromDate, toDate,
-                    amount, amountType, amountPeriod, authPercent, Boolean.parseBoolean(active)));
-
+                    amount, amountType, amountPeriod, authPercent, active));
         }
 
-        return file;
+        if (errors.size() > 0) {
+            System.out.print("File not uploaded");
+
+            for (int i = 0; i < errors.size(); ++i)
+                System.out.println(errors.get(i));
+
+            return null;
+        }
+        else {
+            System.out.print("File uploaded");
+            return file;
+        }
+    }
+
+    public ArrayList<String> getErrors()
+    {
+        return errors;
     }
 }
