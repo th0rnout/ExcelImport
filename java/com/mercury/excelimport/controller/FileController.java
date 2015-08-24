@@ -128,7 +128,7 @@ public class FileController
     {
         ModelAndView model = new ModelAndView("ajax.jsp");
 
-        System.out.println(row.getToDate());
+        System.out.println(row.getContractId());
 
         if(!errors.hasErrors()) {
             if (this.db.validateRow(row))

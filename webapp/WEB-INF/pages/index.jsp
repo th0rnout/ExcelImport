@@ -119,7 +119,7 @@
                         <form:input data-type="string" path="active" type="text" class="form-control" placeholder="Active" style="width: 80px;"/>
                     </div>
                     <div class="form-group">
-                        <form:input data-type="string" path="contractId" type="hidden" value="0"/>
+                        <form:input id="contract-id" data-type="string" path="contractId" type="hidden" value="0"/>
                     </div>
                 </form:form>
 
